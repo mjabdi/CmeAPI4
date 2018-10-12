@@ -1,0 +1,36 @@
+.footerwg{margin:center;display:block;}
+.buttonwg,input{font:inherit;margin:0}
+.buttonwg,input{overflow:visible}button{text-transform:none}
+.buttonwg{-webkit-appearance:button}
+.buttonwg::-moz-focus-inner{border-style:none;padding:0}
+.buttonwg:-moz-focusring{outline:1px dotted ButtonText}
+::-webkit-input-placeholder{color:inherit;opacity:0.54}
+::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}
+/* End extract */
+
+.h2wg{font-family:"Segoe UI",Arial,sans-serif;font-weight:400;margin:20px 0;text-align:center;}
+.w3-buttonwg{border:none;display:inline-block;padding:8px 16px;vertical-align:middle;overflow:hidden;text-decoration:none;color:inherit;background-color:inherit;text-align:center;cursor:pointer;white-space:nowrap}
+.w3-buttonwg{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}   
+.w3-buttonwg:disabled{cursor:not-allowed;opacity:0.3}:disabled *{pointer-events:none}
+.w3-inputwg{padding:8px;display:block;border:none;border-bottom:1px solid #ccc;width:100%}
+
+.w3-modalwg{z-index:3;display:none;padding-top:12%;position:fixed;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgb(0,0,0);background-color:rgba(21, 16, 16, 0.90)}
+.w3-modal-contentwg{margin:auto;background-color:#fff;position:relative;padding:0;outline:0;width:600px}
+.w3-containerwg:after,.w3-containerwg:before{content:"";display:table;clear:both}
+@media (max-width:600px){.w3-modal-contentwg{margin:0 10px;width:auto!important}.w3-modalwg{padding-top:30px}}
+@media (max-width:768px){.w3-modal-contentwg{width:500px}.w3-modalwg{padding-top:50px}}
+
+@media (min-width:993px){.w3-modal-contentwg{width:525px}}.w3-display-toprightwg{position:absolute;right:0;top:0}.w3-round-xxlargewg{border-radius:32px}
+@media (min-width:993px){.w3-modal-contentwg{width:525px}}.w3-display-topwg{position:absolute;right:0;top:0;z-index:10;}.w3-round-xxlargewg{border-radius:32px}
+.w3-containerwg{padding:0.01em 16px}
+.w3-card-4wg{box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19)}
+.w3-animate-bottomwg{position:relative;animation:animatebottom 0.4s}@keyframes animatebottom{from{bottom:-300px;opacity:0} to{bottom:0;opacity:1}}
+.w3-buttonwg:hover{color:#000!important;background-color:#ccc!important}
+/* Colors */
+.w3-bluewg,.w3-hover-bluewg:hover{color:#fff!important;background-color:#2196F3!important}
+.w3-hover-greenwg:hover{color:#fff!important;background-color:#4CAF50!important}
+.w3-hover-redwg:hover{color:#fff!important;background-color:#f44336!important}
+
+.w3-tealwg{color:#fff!important;background-color:#9e9e9e!important}
+
+.helpError{color:red;font-size:11;}

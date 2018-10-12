@@ -1,0 +1,33 @@
+﻿<Properties StartupConfiguration="{C87F8D7C-0F79-485D-85A5-9F762BB1B8AE}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="CallMeAPI/Controllers/AuthController.cs">
+    <Files>
+      <File FileName="CallMeAPI/Controllers/StyleController.cs" Line="112" Column="1" />
+      <File FileName="CallMeAPI/Program.cs" Line="16" Column="43" />
+      <File FileName="CallMeAPI/appsettings.json" Line="14" Column="41" />
+      <File FileName="CallMeAPI/Startup.cs" Line="29" Column="27" />
+      <File FileName="CallMeAPI/Models/MyDBContext.cs" Line="23" Column="49" />
+      <File FileName="CallMeAPI/appsettings.Development.json" Line="16" Column="41" />
+      <File FileName="CallMeAPI/Models/User.cs" Line="19" Column="55" />
+      <File FileName="CallMeAPI/Models/Widget.cs" Line="39" Column="1" />
+      <File FileName="CallMeAPI/Models/EventLog.cs" Line="1" Column="1" />
+      <File FileName="CallMeAPI/Controllers/AuthController.cs" Line="69" Column="50" />
+      <File FileName="CallMeAPI/DTO/LoginDTO.cs" Line="5" Column="26" />
+      <File FileName="CallMeAPI/ServiceExtension.cs" Line="21" Column="40" />
+      <File FileName="CallMeAPI/DTO/RegisterUserDTO.cs" Line="4" Column="18" />
+      <File FileName="CallMeAPI/DTO/WidgetDTO.cs" Line="25" Column="42" />
+      <File FileName="CallMeAPI/Controllers/JSController.cs" Line="22" Column="24" />
+      <File FileName="CallMeAPI/Controllers/CallmeController.cs" Line="104" Column="11" />
+      <File FileName="CallMeAPI/Models/SecurityLinkToken.cs" Line="13" Column="54" />
+      <File FileName="CallMeAPI/Controllers/WidgetController.cs" Line="169" Column="13" />
+      <File FileName="CallMeAPI/Controllers/GradwellController.cs" Line="41" Column="14" />
+      <File FileName="CallMeAPI/Models/CallInfo.cs" Line="22" Column="51" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.CallMeAPI PreferredExecutionTarget="MonoDevelop.Default" />
+</Properties>

@@ -1,0 +1,14 @@
+/Users/mohammad/Projects/CallMeAPI/CallMeAPI/bin/Debug/netcoreapp2.1/CallMeAPI.deps.json
+/Users/mohammad/Projects/CallMeAPI/CallMeAPI/bin/Debug/netcoreapp2.1/CallMeAPI.runtimeconfig.json
+/Users/mohammad/Projects/CallMeAPI/CallMeAPI/bin/Debug/netcoreapp2.1/CallMeAPI.runtimeconfig.dev.json
+/Users/mohammad/Projects/CallMeAPI/CallMeAPI/bin/Debug/netcoreapp2.1/CallMeAPI.dll
+/Users/mohammad/Projects/CallMeAPI/CallMeAPI/bin/Debug/netcoreapp2.1/CallMeAPI.pdb
+/Users/mohammad/Projects/CallMeAPI/CallMeAPI/obj/Debug/netcoreapp2.1/CallMeAPI.csproj.CoreCompileInputs.cache
+/Users/mohammad/Projects/CallMeAPI/CallMeAPI/obj/Debug/netcoreapp2.1/CallMeAPI.RazorAssemblyInfo.cache
+/Users/mohammad/Projects/CallMeAPI/CallMeAPI/obj/Debug/netcoreapp2.1/CallMeAPI.RazorAssemblyInfo.cs
+/Users/mohammad/Projects/CallMeAPI/CallMeAPI/obj/Debug/netcoreapp2.1/CallMeAPI.AssemblyInfoInputs.cache
+/Users/mohammad/Projects/CallMeAPI/CallMeAPI/obj/Debug/netcoreapp2.1/CallMeAPI.AssemblyInfo.cs
+/Users/mohammad/Projects/CallMeAPI/CallMeAPI/obj/Debug/netcoreapp2.1/CallMeAPI.RazorTargetAssemblyInfo.cache
+/Users/mohammad/Projects/CallMeAPI/CallMeAPI/obj/Debug/netcoreapp2.1/CallMeAPI.dll
+/Users/mohammad/Projects/CallMeAPI/CallMeAPI/obj/Debug/netcoreapp2.1/CallMeAPI.pdb
+/Users/mohammad/Projects/CallMeAPI/CallMeAPI/obj/Debug/netcoreapp2.1/CallMeAPI.csprojResolveAssemblyReference.cache
