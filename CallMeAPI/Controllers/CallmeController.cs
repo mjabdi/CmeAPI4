@@ -66,9 +66,6 @@ namespace CallMeAPI.Controllers
             response.result = "OK";
 
             List<CustomDateTime> datetimes = new List<CustomDateTime>();
-            datetimes.Add(new CustomDateTime { date = "Oct-18" ,
-                times = new string[] {"10:00" , "10:30" , "11:00" , "11:30" }
-            });
 
             datetimes.Add(new CustomDateTime
             {

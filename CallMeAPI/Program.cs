@@ -13,7 +13,7 @@ namespace CallMeAPI
 {
     public class Program
     {
-        public static bool onAzure = false;
+        public static bool onAzure = true;
         public static string Host = "api.talktoleadsnow.com";
 
         public static void Main(string[] args)
