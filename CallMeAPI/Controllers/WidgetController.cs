@@ -50,23 +50,30 @@ namespace CallMeAPI.Controllers
         [HttpGet("user/{email}")]
         public async Task<IEnumerable<WidgetDTO>> GetAllWidgetsForUser(string email)
         {
-            AuthController.ValidateAndGetCurrentUserName(this.HttpContext.Request);
-
-            email = email.Replace("'", "");
-
-            List<Widget> widgetList = new List<Widget>();
-            widgetList = await context.Widgets.Include(widget => widget.User)
-                                .Where(widget => widget.UserID == email)
-                                .OrderBy(widget => widget.CreationDateTime)  
-                                .ToListAsync();
-
-            List<WidgetDTO> widgetDTOList = new List<WidgetDTO>();
-            foreach (Widget widget in widgetList)
+            try
             {
-                widgetDTOList.Add(new WidgetDTO(widget));
-            }
 
-            return widgetDTOList;
+                AuthController.ValidateAndGetCurrentUserName(this.HttpContext.Request);
+
+                email = email.Replace("'", "");
+
+                List<Widget> widgetList = new List<Widget>();
+                widgetList = await context.Widgets.Include(widget => widget.User)
+                                    .Where(widget => widget.UserID == email)
+                                    .OrderBy(widget => widget.CreationDateTime)
+                                    .ToListAsync();
+
+                List<WidgetDTO> widgetDTOList = new List<WidgetDTO>();
+                foreach (Widget widget in widgetList)
+                {
+                    widgetDTOList.Add(new WidgetDTO(widget));
+                }
+
+                return widgetDTOList;
+            }catch(Exception ex)
+            {
+                throw ex;
+            }
         }
 
 

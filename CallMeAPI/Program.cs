@@ -21,10 +21,21 @@ namespace CallMeAPI
             CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-        WebHost.CreateDefaultBuilder(args).UseKestrel(options => {
-            options.ListenAnyIP(5090); //HTTP port
-        })
-                .UseStartup<Startup>();
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        {
+            if (onAzure)
+            {
+                return WebHost.CreateDefaultBuilder(args)
+                              .UseAzureAppServices().UseStartup<Startup>();
+            }
+            else
+            {
+                return WebHost.CreateDefaultBuilder(args).UseKestrel(options =>
+                {
+                    options.ListenAnyIP(5090); //HTTP port
+            })
+                        .UseStartup<Startup>();
+            }
+        }
     }
 }

@@ -37,6 +37,8 @@ namespace CallMeAPI.Models
         public string AuthKey { get; set; }
         public string Extension { get; set; }
 
+        public string WeekDays { get; set; }
+
         public Widget()
         {
             
@@ -58,6 +60,7 @@ namespace CallMeAPI.Models
             IsAnimated = widgetDTO.IsAnimated;
             CallsCount = 0;
             CreationDateTime = DateTime.Now;
+            WeekDays = WeekDay.ConvertToString(widgetDTO.WeekDays);
         }
 
         public void updateFromWidgetDTO(WidgetDTO widget)
@@ -69,6 +72,7 @@ namespace CallMeAPI.Models
             ColorText = widget.ColorText;
             IsAnimated = widget.IsAnimated;
             DomainURL = widget.DomainUrl;
+            WeekDays = WeekDay.ConvertToString(widget.WeekDays);
         }
     }
 }

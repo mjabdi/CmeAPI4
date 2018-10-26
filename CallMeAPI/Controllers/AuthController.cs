@@ -115,8 +115,10 @@ namespace CallMeAPI.Controllers
                     signingCredentials: signinCredentials
                 );
 
+                _user.LastLogon = DateTime.Now;
+                contextUsers.SaveChanges();
                 var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
-                return Ok(new { Token = tokenString });
+                return Ok(new { Token = tokenString , Name = _user.Name });
             }
             else
             {

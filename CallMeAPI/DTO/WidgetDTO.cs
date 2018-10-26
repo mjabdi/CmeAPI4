@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using CallMeAPI.Models;
 
 namespace CallMeAPI.DTO
@@ -23,6 +24,14 @@ namespace CallMeAPI.DTO
             IsAnimated = widget.IsAnimated;
             CallsCount = widget.CallsCount;
             DomainUrl = widget.DomainURL;
+
+            List<WeekDay> dayList = WeekDay.GetFromString(widget.WeekDays);
+
+            WeekDays = new WeekDay[dayList.Count];
+            for (int i = 0; i < WeekDays.Length; i++)
+            {
+                WeekDays[i] = dayList[i];
+            }
         }
 
         public string ID { get; set; }
@@ -47,8 +56,6 @@ namespace CallMeAPI.DTO
 
         public string DomainUrl { get; set; }
 
-
-
-
+        public WeekDay[] WeekDays { get; set; }
     }
 }
