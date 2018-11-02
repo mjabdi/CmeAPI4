@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using CallMeAPI.DTO;
 using System.Net.Mail;
 using System.Net;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -25,8 +26,8 @@ namespace CallMeAPI.Controllers
     public class AuthController : Controller
     {
 
-        private string FromEmail = "m.jafarabdi@gmail.com";
-        private string EmailPassword = "amamja63";
+        public static string FromEmail = "m.jafarabdi@gmail.com";
+        public static string EmailPassword = "amamja63";
 
         private readonly MyDBContext contextUsers;
         IConfiguration configuration;
@@ -74,6 +75,35 @@ namespace CallMeAPI.Controllers
                 return null;
             }
         }
+
+        [HttpGet("customers")]
+        public IEnumerable<CustomerDTO> GetCustomers()
+        {
+            AuthController.ValidateAndGetCurrentUserName(this.HttpContext.Request);
+
+            try
+            {
+                List<User> users = contextUsers.Users.Where(u => u.IsActive == true).OrderByDescending(u => u.CreationDateTime).ToList();
+                List<CustomerDTO> customers = new List<CustomerDTO>();
+                foreach(User user in users)
+                {
+                    CustomerDTO customer = new CustomerDTO();
+                    customer.name = user.Name;
+                    customer.email = user.UserID;
+                    customer.creationDateTime = user.CreationDateTime.ToShortDateString() + " [" +  user.CreationDateTime.ToShortTimeString() + "]";
+                    if (user.LastLogon.HasValue)
+                        customer.lastLogin = user.LastLogon?.ToShortDateString() + " [" + user.LastLogon?.ToShortTimeString() + "]";
+                    customers.Add(customer);
+                }
+
+                return customers;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
 
 
 
@@ -421,6 +451,17 @@ namespace CallMeAPI.Controllers
 
             return Ok();
         }
+    }
+
+    public class CustomerDTO
+    {
+        public string name { get; set; }
+        public string email { get; set; }
+        public string creationDateTime { get; set; }
+        public string lastLogin { get; set; }
+        public int widgetsCount { get; set; }
+        public string subscription { get; set; }
+
     }
 
     public class EmailDTO

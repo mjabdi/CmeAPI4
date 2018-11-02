@@ -37,7 +37,7 @@ namespace CallMeAPI.Controllers
 
             //content = Regex.Replace(content, @"\t|\n|\r| ", "");
 
-            return Content(content, "text/javascript");
+            return Content(content, "text/javascript",System.Text.Encoding.UTF8);
         }
     }
 }

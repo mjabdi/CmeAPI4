@@ -98,7 +98,6 @@
 
 .zcwPopup button,
 .zcwPopup input,
-.zcwPopup select,
 .zcwPopup textarea {
     margin: 0;
     width: auto !important;
@@ -109,7 +108,6 @@
 }
 
 .zcwPopup input.zcwInputError,
-.zcwPopup select.zcwInputError,
 .zcwPopup textarea.zcwInputError {
     border: 1px solid red;
 }

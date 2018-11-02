@@ -24,8 +24,16 @@ namespace CallMeAPI.DTO
             IsAnimated = widget.IsAnimated;
             CallsCount = widget.CallsCount;
             DomainUrl = widget.DomainURL;
+            AuthKey = widget.AuthKey;
+            Extension = widget.Extension;
 
-            List<WeekDay> dayList = WeekDay.GetFromString(widget.WeekDays);
+            string week_days = widget.WeekDays;
+            if (string.IsNullOrEmpty(week_days))
+            {
+                week_days = "Monday|True|09:00|17:00$Tuesday|True|09:00|17:00$Wednesday|True|09:00|17:00$Thursday|True|09:00|17:00$Friday|True|09:00|17:00$Saturday|False|09:00|17:00$Sunday|False|09:00|17:00$";
+            }
+
+            List<WeekDay> dayList = WeekDay.GetFromString(week_days);
 
             WeekDays = new WeekDay[dayList.Count];
             for (int i = 0; i < WeekDays.Length; i++)
@@ -57,5 +65,11 @@ namespace CallMeAPI.DTO
         public string DomainUrl { get; set; }
 
         public WeekDay[] WeekDays { get; set; }
+
+        public string AuthKey { get; set; }
+        public string Extension { get; set; }
+
+
+
     }
 }

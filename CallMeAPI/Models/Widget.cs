@@ -72,6 +72,10 @@ namespace CallMeAPI.Models
             ColorText = widget.ColorText;
             IsAnimated = widget.IsAnimated;
             DomainURL = widget.DomainUrl;
+
+            AuthKey = widget.AuthKey;
+            Extension = widget.Extension;
+
             WeekDays = WeekDay.ConvertToString(widget.WeekDays);
         }
     }

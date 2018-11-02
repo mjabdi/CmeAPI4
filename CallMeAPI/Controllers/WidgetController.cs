@@ -24,15 +24,39 @@ namespace CallMeAPI.Controllers
 
 
 
-        // GET: api/widget
-        [HttpGet]
-        public async Task<IEnumerable<WidgetDTO>> GetAllWidgets()
+        // GET: api/widget/new
+        [HttpGet("new")]
+        public async Task<IEnumerable<WidgetDTO>> GetAllWidgetsNew()
         {
             AuthController.ValidateAndGetCurrentUserName(this.HttpContext.Request);
 
             List<Widget> widgetList = new List<Widget>();
             widgetList = await context.Widgets.Include(widget => widget.User)
-                                      .OrderBy(widget => widget.CreationDateTime)     
+                                      .OrderBy(widget => widget.CreationDateTime)
+                                      .Where(widget => string.IsNullOrEmpty(widget.AuthKey) 
+                                             || string.IsNullOrEmpty(widget.Extension))
+                                      .ToListAsync();
+
+            List<WidgetDTO> widgetDTOList = new List<WidgetDTO>();
+            foreach (Widget widget in widgetList)
+            {
+                widgetDTOList.Add(new WidgetDTO(widget));
+            }
+
+            return widgetDTOList;
+        }
+
+        // GET: api/widget/history
+        [HttpGet("history")]
+        public async Task<IEnumerable<WidgetDTO>> GetAllWidgetsHistory()
+        {
+            AuthController.ValidateAndGetCurrentUserName(this.HttpContext.Request);
+
+            List<Widget> widgetList = new List<Widget>();
+            widgetList = await context.Widgets.Include(widget => widget.User)
+                                      .OrderBy(widget => widget.CreationDateTime)
+                                      .Where(widget => !string.IsNullOrEmpty(widget.AuthKey)
+                                             &&  !string.IsNullOrEmpty(widget.Extension))
                                       .ToListAsync();
 
             List<WidgetDTO> widgetDTOList = new List<WidgetDTO>();
@@ -151,7 +175,7 @@ namespace CallMeAPI.Controllers
         }
 
 
-        // Put api/widget/5
+        // Put api/widget/status/5
         [HttpPut("status/{id}")]
         public async Task<IActionResult> Disable(string id, [FromBody]WidgetDTO widgetDTO)
         {
@@ -166,6 +190,24 @@ namespace CallMeAPI.Controllers
             await context.SaveChangesAsync();
             return Ok();
         }
+
+        // Put api/widget/extension/5
+        [HttpPut("extension/{id}")]
+        public async Task<IActionResult> UpdateExtension(string id, [FromBody]WidgetDTO widgetDTO)
+        {
+            AuthController.ValidateAndGetCurrentUserName(this.HttpContext.Request);
+
+            Widget widget = context.Widgets.Find(Guid.Parse(id));
+            if (widget == null)
+                return NotFound();
+
+            widget.AuthKey = widgetDTO.AuthKey;
+            widget.Extension = widgetDTO.Extension;
+
+            await context.SaveChangesAsync();
+            return Ok();
+        }
+
 
 
         // DELETE api/widget/5

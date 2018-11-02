@@ -21,6 +21,7 @@ namespace CallMeAPI.Models
         public virtual DbSet<EventLog> EventLogs { get; set; }
         public virtual DbSet<SecurityLinkToken> SecurityLinkTokens { get; set; }
         public virtual DbSet<CallInfo> CallInfos { get; set; }
+        public virtual DbSet<CallbackSchedule> CallbackSchedules { get; set; }
 
 
     }

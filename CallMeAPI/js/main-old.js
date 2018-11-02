@@ -6,27 +6,40 @@
 
 
 
-var fullDate = null;
-var times = null;
-/* var ready = 0; */
 
 
+
+// var link = document.createElement( "link" );
+// 				link.href = "$server$/api/style/w3.css";
+// 				link.type = "text/css";
+// 				link.rel = "stylesheet";
+// 				link.media = "screen,print";
+// 				document.getElementsByTagName( "head" )[0].appendChild( link );
+
+
+				
+				// var link = document.createElement( "link" );
+				// link.href = "connecting.css";
+				// link.type = "text/css";
+				// link.rel = "stylesheet";
+				// link.media = "screen,print";
+				// document.getElementsByTagName( "head" )[0].appendChild( link );
+				
 
 
 var imported3 = document.createElement('script');
 imported3.src = '$server$/api/js/jquery.validate.js';
 document.head.appendChild(imported3)
 
-
 var versionUpdate = (new Date()).getTime();  
 
 var link = document.createElement( "link" );
+/* link.href = "https://callmeapi.azurewebsites.net:/api/style"; */
 link.href = "$server$/api/style/css/" + ZCallbackWidgetLinkId + "?v=" + versionUpdate;
 link.type = "text/css";
 link.rel = "stylesheet";
 link.media = "screen,print";
 document.getElementsByTagName( "head" )[0].appendChild( link );
-
 
 
 
@@ -47,12 +60,7 @@ document.getElementsByTagName( "head" )[0].appendChild( link );
 		crossDomain: true,
 		success: function (taskdue) {
 			
-			
-			if(taskdue == "OK"){
-				createcallme();
-				}else{
-				//It's not valid of didn't found
-				}
+			createcallme();
 			
 				},
 				error: function (taskdue) {
@@ -62,32 +70,6 @@ document.getElementsByTagName( "head" )[0].appendChild( link );
 				}
 			});
 
-			
-			function refreshschdl(){
-				
-				
-				
-				removed = 0;
-				$('#refreshschedule').empty();
-				$('#refreshbtn').empty();	
-	
-				
-				
-				var schedule = '<div class="js-days-regionwg mvlwg"><div class="week-viewwg"><div id="datetext" class="mblwg text-centerwg">Select a Day</div><div class="js-days-regionwg"><div class="periodwg rowwg"><div class="centeredwg js-days-bodywg">';
-				for (var i = 0; i < times.length; i++) {
-				schedule = schedule + '<div id="daybox'+i+'" class="fractionwg js-day-wrapperwg availablewg">'+times[i].today+'<div id="day'+i+'" class="daywg js-show-pickerwg" onclick="setdate('+i+')"><div><strong class="shorthandwg strongwg">'+times[i].day+'</strong><strong class="fullwg strongwg">'+times[i].fullday+'</strong>'+times[i].todaym+'</div><div><div class="mutedwg shorthandwg">'+times[i].date+'</div><div class="fullwg mutedwg">'+times[i].fulldate+'</div></div><i class="icon-arrow-rightwg"/></div></div>';
-				}
-				schedule = schedule + '<div class="fractionwg js-day-wrapperwg availablewg"/></div></div></div></div></div>';
-				$(refreshschedule).html(schedule);
-				
-
-			}
-			
-			
-			function closeboxsc(){
-				showcallme();
-				$('#callackonnecting').remove();
-			}
 			
 			function closebox(){
 				showcallme();
@@ -100,154 +82,12 @@ document.getElementsByTagName( "head" )[0].appendChild( link );
 			}
 			
 	
-			var id = null;
-			var removed = 0;
-			var day = null;
-			var daybox = null;
-			var dayboxunavalable = null;
-			var tagid = null;
-			
-			var dateElement1;
-			var dateElement2;
-			var dateElement3;
-
-			
-			function setdate(day){
-
-			var index = day;
-				
-			removed = 0;
-
-			if(removed == 0){
-			
-			tagid = day;
-			id = "#day"+day
-			daybox = "#daybox"+day;
-			dayid = "#day"+day;
-			day = "day"+day;	
-			
-
 			
 			
-
-
 			
-			$('#datetext').empty();
-
-			$('#datetext').html("Select Time");
-
-
-
-
-				
-			// $('#refreshbtn').html("<span style='margin-right:35px;' onclick='refreshschdl()' class='w3-buttonwg-close w3-display-toprightwg'>&#8635;</span>");
-			
-			$(daybox).removeClass("fractionwg js-day-wrapperwg availablewg").addClass("fractionwg js-day-wrapperwg availablewg fractionmiddelwg"); 
-			$(dayid).removeClass("fractionwg js-day-wrapperwg").addClass("fractionwg js-day-wrapperwg"); 	
-			for(var i =0; i<3;i++){
-				dayboxunavalable = "#dayboxwg"+i;
-				if(i != tagid){
-				$(dayboxunavalable).removeClass("fractionwg js-day-wrapperwg availablewg").addClass("fractionwg js-day-wrapperwg unavailablewg"); 
-			}else{
-				$(dayboxunavalable).removeClass("fractionwg js-day-wrapperwg unavailablewg").addClass("fractionwg js-day-wrapperwg availablewg"); 	
-			}
-			}
-			
-
-			fullDate = document.getElementById(day).childNodes[1].childNodes[1].innerText;
-
-			if (index == 0 && ($(id).children().length < 4))
-			{
-				dateElement1 = $(id).children().clone();
-			}
-			else if (index == 1 && ($(id).children().length < 4))
-			{
-				dateElement2 = $(id).children().clone();
-			}
-			else if (index == 2 && ($(id).children().length < 4))
-			{
-				dateElement3 = $(id).children().clone();
-			}
-
-			//$(id).empty();
-
-			removed = 1;			
-
-				if ($(id).children().length < 4)
-					$(id).append(times[tagid].times);
-
-				if (index == 0)
-				{
-					if (dateElement2)
-					{
-						$("#day1").empty();
-						$("#day1").html(dateElement2);
-					}
-						
-					if (dateElement3)
-					{
-						$("#day2").empty();
-						$("#day2").html(dateElement3);
-					}
-				}
-				else if (index == 1)
-				{
-					if (dateElement1)
-					{
-						$("#day0").empty();
-						$("#day0").html(dateElement1);
-					}
-						
-					if (dateElement3)
-					{
-						$("#day2").empty();
-						$("#day2").html(dateElement3);
-					}
-				}
-				else if (index == 2)
-				{
-					if (dateElement1)
-					{
-						$("#day0").empty();
-						$("#day0").html(dateElement1);
-					}
-						
-					if (dateElement2)
-					{
-						$("#day1").empty();
-						$("#day1").html(dateElement2);
-					}
-				}
-			}
-
-			}
 
 			function widget() {
 			
-			$.ajax({
-		type: "POST",
-		url: '$server$/api/callme/getschedule',
-		dataType: "json",
-		data: JSON.stringify({
-			token: ZCallbackWidgetLinkId
-		  }),
-		  
-		  headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json'
-		  },
-
-		async: true,
-		crossDomain: true,
-		success: function (taskdue) {
-		
-		
-
-		times = taskdue.datetimes;
-		if(taskdue.result == "Open"){ 
-		
-		
-		
 			hidecallme();
 			var callElem = document.getElementById('callackonnecting');
 			if (callElem === null) {
@@ -258,9 +98,9 @@ document.getElementsByTagName( "head" )[0].appendChild( link );
 				
 				
 				
-			
+				
 				$('#inputwidget').empty();
-				$('#inputwidget').html('<div id="id01" class="w3-modalwg bodywg"><form id="w3containererwg" name="callmenow" novalidate="novalidate"><div id="callmenow" class="w3-modal-contentwg w3-animate-bottomwg w3-card-4wg"><header style="background:#fff !important;"  class="w3-containerwg w3-tealwg"><span onclick="closebox()" class="w3-buttonwg-close w3-display-toprightwg">&times;</span><h2 class="h2wg">Would you like us to call you back?</h2></header><div class="w3-containerwg"><p style="color:black !important">Your Name :<input id="name" name="name" class="w3-inputwg" type="text"></p><p style="color:black !important">Email :<input id="email" name="email" class="w3-inputwg" type="text"></p><p style="color:black !important">Phone Number :<div class="phonebox"><div class="ukdiv"><span><img class="ukbox" src="$server$/api/style/images/uk.png"><span class="span-44">+44</span></span></div><div class="inputphonebox"><input class="inputphone" id="phone" name="phone" class="w3-inputwg" type="text"></div></div><input id="token" type="hidden" name="key" value="'+ZCallbackWidgetLinkId+'"></p></div><footer style="background:#fff !important;"  class="w3-containerwg w3-tealwg"><input class="w3-buttonwg w3-bluewg w3-round-xxlargewg buttonwg" type="submit"  value="Request a call-back"></footer></div><span class="helpError"><span></form></div>');
+				$('#inputwidget').html('<div id="id01" class="w3-modalwg"><form id="w3containererwg" name="callmenow" novalidate="novalidate"><div id="callmenow" class="w3-modal-contentwg w3-animate-bottomwg w3-card-4wg"><header style="background:#fff !important;"  class="w3-containerwg w3-tealwg"><span onclick="closebox()" class="w3-buttonwg-close w3-display-toprightwg">&times;</span><h2 class="h2wg">Would you like us to call you back?</h2></header><div class="w3-containerwg"><p style="color:black !important">Your Name :<input id="name" name="name" class="w3-inputwg" type="text"></p><p style="color:black !important">Email :<input id="email" name="email" class="w3-inputwg" type="text"></p><p style="color:black !important">Phone Number :<input id="phone" name="phone" class="w3-inputwg" type="text"><input id="token" type="hidden" name="key" value="'+ZCallbackWidgetLinkId+'"></p></div><footer style="background:#fff !important;"  class="w3-containerwg w3-tealwg"><p margin-left="40px" ><input class="w3-buttonwg w3-bluewg w3-round-xxlargewg buttonwg" type="submit"  value="Request a call-back"></p></footer></div><span class="helpError"><span></form></div>');
 				var imported = document.createElement('script');
 				imported.src = '$server$/api/js/widget.js';
 				document.head.appendChild(imported);
@@ -268,57 +108,8 @@ document.getElementsByTagName( "head" )[0].appendChild( link );
 				document.getElementById('id01').style.display='block'
 				$('#inputwidget').show();
 			}
-			
-			
-
-			}else if(taskdue.result == "Close"){ 
-					
-			hidecallme();
-
-						
-						
-            
-			$('#inputwidget').remove();
-				var div10 = document.createElement("DIV");
-				div10.setAttribute("id","callackonnecting");
-				document.body.appendChild(div10);
-
-				var strwidget = '<div id="id02" class="w3-modalwg bodywg"><form id="w3containererwg" name="callMeNowSchedule" novalidate="novalidate"><div id="callMeNowSchedule" class="w3-modal-contentwg w3-animate-bottomwg w3-card-4wg"><header style="background:#fff !important;"  class="w3-containerwg w3-tealwg"><span onclick="closeboxsc()" class="w3-buttonwg-close w3-display-toprightwg">&times;</span><span id="refreshbtn"></span><h2 class="h2wg">Would you like us to call you back?</h2></header><div class="w3-containerwg"><p style="color:black !important">Your Name :<input id="name" name="name" class="w3-inputwg" type="text"></p><p style="color:black !important">Email :<input id="email" name="email" class="w3-inputwg" type="text"></p><p style="color:black !important">Phone Number :<div class="phonebox"><div class="ukdiv"><span><img class="ukbox" src="$server$/api/style/images/uk.png" ><span class="span-44">+44</span></span></div><div class="inputphonebox"><input class="inputphone" id="phone" name="phone" class="w3-inputwg" type="text"></div></div><input id="token" type="hidden" name="key" value="'+ZCallbackWidgetLinkId+'"></p><div  id="refreshschedule" class="wrapperwg"><div class="js-days-regionwg mvlwg"><div class="week-viewwg"><p class="mblwg text-centerwg">Unfortunately, we are not at work right now, please choose your preferred time to call you back :</p><div class="js-days-regionwg"><div class="periodwg rowwg"><div class="centeredwg js-days-bodywg">';
-				for (var i = 0; i < taskdue.datetimes.length; i++) {
-				strwidget = strwidget + '<div id="dayboxwg'+i+'" class="fractionwg js-day-wrapperwg availablewg">'+taskdue.datetimes[i].today+'<div id="day'+i+'" class="daywg js-show-pickerwg" onclick="setdate('+i+')"><div><strong class="shorthandwg strongwg">'+taskdue.datetimes[i].day+'</strong><strong class="fullwg strongwg">'+taskdue.datetimes[i].fullday+'</strong>'+taskdue.datetimes[i].todaym+'</div><div><div class="mutedwg shorthandwg">'+taskdue.datetimes[i].date+'</div><div class="fullwg mutedwg">'+taskdue.datetimes[i].fulldate+'</div></div><i class="icon-arrow-rightwg"/></div></div>';
-				}
-				strwidget = strwidget + '<div class="fractionwg js-day-wrapperwg availablewg"/></div></div></div></div></div></div></div><footer style="background:#fff !important;"  class="w3-containerwg w3-tealwg"><input class="w3-buttonwgsc w3-bluewg w3-round-xxlargewg buttonwg" type="submit"  value="Request a call-back"></footer></div><span class="helpError"><span></form></div>';
-				$('#callackonnecting').html(strwidget);
-			
-				var imported = document.createElement('script');
-				imported.src = '$server$/api/js/schedulewidget.js';
-				document.head.appendChild(imported);
-
-
-				document.getElementById('id02').style.display='block';
-
-					
-					
-				
-			}
-		
-		
-				},
-				error: function (taskdue) {
-
-						// alert("Auth Failed");
-						
-				}
-			});
-		
-			
 	
 			}
-			
-			
-			
-			
-			
 			
 			
 			function createcallme(){
@@ -385,9 +176,6 @@ document.getElementsByTagName( "head" )[0].appendChild( link );
 			
 			}
 
-			
-			
-						
 
 			function hidecallme(){
 	
@@ -407,10 +195,5 @@ document.getElementsByTagName( "head" )[0].appendChild( link );
 	
 								}
 	
-	
-	
-	
-	/* When the user clicks on the button, 
-toggle between hiding and showing the dropdown content */
 
 

@@ -55,6 +55,10 @@ namespace CallMeAPI.Controllers
             string content2 = reader.ReadToEnd();
             reader.Close();
 
+            reader = new StreamReader(_rootPath + "schedulewidget.css");
+            string content3 = reader.ReadToEnd();
+            reader.Close();
+
             content = content + "\r\n" + content2;
 
             content = content.Replace("$server$", "http://" + host);
@@ -66,11 +70,13 @@ namespace CallMeAPI.Controllers
             content = content.Replace("$text-talktous$", widget.TalkToUsText);
 
 
+            content = content + "\r\n" + content3;
+
 
 
             //content = Regex.Replace(content, @"\t|\n|\r| ", "");
 
-            return Content(content, "text/css");
+            return Content(content, "text/css",System.Text.Encoding.UTF8);
         }
 
 
