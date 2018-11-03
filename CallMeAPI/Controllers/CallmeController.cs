@@ -55,7 +55,7 @@ namespace CallMeAPI.Controllers
                         {
                             //send email notification
 
-                            sendCallNotificationEmail(cs.widget.UserID, cs.widget.User.Name, cs.LeadName, cs.LeadEmail, cs.LeadPhoneNumber, cs.ScheduledDateTime.ToString(), cs.LeadMessage);
+                            sendCallNotificationEmail(cs.widget.NotificationEmail, cs.widget.User.Name, cs.LeadName, cs.LeadEmail, cs.LeadPhoneNumber, cs.ScheduledDateTime.ToString(), cs.LeadMessage);
 
                             cs.EmailNotificationDone = true;
                             await context.SaveChangesAsync();
@@ -527,20 +527,26 @@ namespace CallMeAPI.Controllers
         [HttpPost]
         public string Callme([FromBody]CallmeDTO callInfo)
         {
+            try
+            {
+                if (callInfo == null)
+                    return "NotFound";
 
-            if (callInfo == null)
-                return "NotFound";
+                Widget wgt = context.Widgets.Find(Guid.Parse(callInfo.token));
 
-            Widget wgt = context.Widgets.Find(Guid.Parse(callInfo.token));
+                if (wgt == null)
+                    return "NotFound";
 
-            if (wgt == null)
-                return "NotFound";
-
-            Call(wgt.ID, callInfo.phone, wgt.AuthKey, wgt.Extension, callInfo.name);
+                Call(wgt.ID, callInfo.phone, wgt.AuthKey, wgt.Extension, callInfo.name);
 
 
 
-            return "OK: Call request sent";
+                return "OK: Call request sent";
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
 
 
@@ -617,7 +623,13 @@ namespace CallMeAPI.Controllers
         {
             try
             {
-                var request = (HttpWebRequest)WebRequest.Create("https://call-api.gradwell.com/0.9.3/call");
+                var request = (HttpWebRequest)WebRequest.Create("https://voip.alexvoip.co.uk/api/0.9.3/call");
+
+
+                if (!phoneNumber.Trim().StartsWith("0"))
+                {
+                    phoneNumber = "0" + phoneNumber;
+                }
 
                 string sep = "&";
 
@@ -722,7 +734,7 @@ namespace CallMeAPI.Controllers
 
     public class CallmeDTO
     {
-        public string reqUrl { get; set; }
+        public string site { get; set; }
         public string token { get; set; }
         public string email { get; set; }
         public string name { get; set; }
@@ -732,6 +744,7 @@ namespace CallMeAPI.Controllers
 
     public class ScheduleCallDTO
     {
+        public string site { get; set; }
         public string token { get; set; }
         public string name { get; set; }
         public string email { get; set; }

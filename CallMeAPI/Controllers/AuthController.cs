@@ -273,7 +273,7 @@ namespace CallMeAPI.Controllers
                 message.Body = "Hello " + username + "!";
                 message.Body += "<br/>";
                 message.Body += "<p>Please click the link below to reset your password, and set a new password for your TalkToLeadsNow account!</p>";
-                message.Body += "<a target='_balnk' href='" + "http://www.talktoleadsnow.com/#/resetpassword/" + token + "'>" + "http://talktoleadsnow.com/#/resetpassword/" + token + "</a>";
+                message.Body += "<a target='_balnk' href='" + "http://portal.talktoleadsnow.com/#/resetpassword/" + token + "'>" + "http://portal.talktoleadsnow.com/#/resetpassword/" + token + "</a>";
                 message.Body += "<p>Regards,</p>";
                 message.Body += "<p>TalkToLeadsNow team.</p>";
                 message.Body += "<a target='_balnk' href='http://www.talktoleadsnow.com'> <img width='200px' src='http://api.talktoleadsnow.com/api/style/images/talktoleadsnow-small.png'></a>";
@@ -304,7 +304,7 @@ namespace CallMeAPI.Controllers
                 message.Body = "Hello " + username + "!";
                 message.Body += "<br/>";
                 message.Body += "<p>Please click the link below to activate your account, and start using TalkToLeadsNow!</p>";
-                message.Body += "<a target='_balnk' href='" + "http://www.talktoleadsnow.com/#/activationlink/" + token + "'>"+  "http://talktoleadsnow.com/#/activationlink/" + token  +"</a>";
+                message.Body += "<a target='_balnk' href='" + "http://portal.talktoleadsnow.com/#/activationlink/" + token + "'>"+  "http://portal.talktoleadsnow.com/#/activationlink/" + token  +"</a>";
                 message.Body += "<p>Regards,</p>";
                 message.Body += "<p>TalkToLeadsNow team.</p>";
                 message.Body += "<a target='_balnk' href='http://talktoleadsnow.com'> <img width='200px' src='http://api.talktoleadsnow.com/api/style/images/talktoleadsnow-small.png'></a>";

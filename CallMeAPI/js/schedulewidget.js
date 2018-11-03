@@ -12,14 +12,15 @@ $(document).ready(function() {
 function callMeNowSchedule(){
 
 	
-ReqUrl=window.location;
+	
+    ReqUrl = "'" +  window.location + "'";
 
     var url = "$server$/api/callme/schedulecall"; // the script where you handle the form input.
     $.ajax({
         url: url,
         type: "POST",
         data:  JSON.stringify({
-			reqUrl: ReqUrl,
+			site : ReqUrl,
             token: $('#token').val(),
             name : $('#name').val(),
             email : $('#email').val(),
@@ -82,6 +83,18 @@ function validateCallMeForm(){
     },"Please enter a valid Email.");
 
     $.validator.addMethod("phoneRegex",function(value, element) {
+
+        var pos = value.trim().substr(0, 1);
+        if (pos != '0')
+        {
+            value = '0' + value;
+        }
+
+        if (value.substr(0, 3) == '070')
+            return false;
+
+        if(/^(07\d{8,12}|01\d{8,12}|02\d{8,12}|03\d{8,12})$/.test( value ))
+
         if(/^(07\d{8,12}|447\d{7,11})$/.test( value ))
         { return true;} else{ return false;}
     },"This Phone no is for the UK customers only.");
