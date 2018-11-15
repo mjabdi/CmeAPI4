@@ -11,7 +11,11 @@ $(document).ready(function() {
 
 function callMeNowSchedule(){
 
-	
+    if (!$('#schedule_calltime').val())
+    {
+        alert("Please choose a time!");
+        return false;
+    }
 	
     ReqUrl = "'" +  window.location + "'";
 
@@ -21,12 +25,12 @@ function callMeNowSchedule(){
         type: "POST",
         data:  JSON.stringify({
 			site : ReqUrl,
-            token: $('#token').val(),
-            name : $('#name').val(),
-            email : $('#email').val(),
+            token: $('#talktoleadsnow_token').val(),
+            name : $('#talktoleadsnow_name').val(),
+            email : $('#talktoleadsnow_email').val(),
 			time : $('#schedule_calltime').val(),
 			date : fullDate,
-            phone : $('#phone').val()
+            phone : $('#talktoleadsnow_phone').val()
 		  }),
         headers: {
 			'Accept': 'application/json',
@@ -76,11 +80,23 @@ function callMeNowSchedule(){
 
 
 function validateCallMeForm(){
-	hidecallme();
+    //hidecallme();
+    
+
+    // alert($('#schedule_calltime').val());
+
+
 	$.validator.addMethod("emailRegex",function(value, element) {
         if(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test( value ))
         { return true;} else{ return false;}
     },"Please enter a valid Email.");
+    
+
+    // $.validator.addMethod("schedule_calltime_validate",function(value, element) {
+    //     alert($('#schedule_calltime').val());
+    //     if ($('#schedule_calltime').val()) {return true;} else {return false;}   
+    // },"Please choose a time.");
+
 
     $.validator.addMethod("phoneRegex",function(value, element) {
 
@@ -120,19 +136,19 @@ function validateCallMeForm(){
 
         rules: {
 
-            name: {
+            talktoleadsnowname: {
 
                 required: true,
                 nameRegex : true
 
             },
-            phone: {
+            talktoleadsnowphone: {
 
                 required: true,
                 phoneRegex: true
 
             },
-            email: {
+            talktoleadsnowemail: {
 
                 required: true,
                 email:true

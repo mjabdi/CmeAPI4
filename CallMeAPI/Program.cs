@@ -13,11 +13,17 @@ namespace CallMeAPI
 {
     public class Program
     {
-        public static bool onAzure = true;
+        public static bool onAzure = false;
         public static string Host = "api.talktoleadsnow.com";
+        public static string HTTP_PREFIX = "http://";
 
         public static void Main(string[] args)
         {
+            if (onAzure)
+            {
+                HTTP_PREFIX = "https://";
+            }
+
             CreateWebHostBuilder(args).Build().Run();
         }
 

@@ -33,7 +33,7 @@ namespace CallMeAPI.Controllers
             string content = reader.ReadToEnd();
             reader.Close();
 
-            content = content.Replace("$server$", "http://" + host);
+            content = content.Replace("$server$", Program.HTTP_PREFIX + host);
 
             //content = Regex.Replace(content, @"\t|\n|\r| ", "");
 

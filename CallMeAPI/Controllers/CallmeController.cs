@@ -55,7 +55,7 @@ namespace CallMeAPI.Controllers
                         {
                             //send email notification
 
-                            sendCallNotificationEmail(cs.widget.NotificationEmail, cs.widget.User.Name, cs.LeadName, cs.LeadEmail, cs.LeadPhoneNumber, cs.ScheduledDateTime.ToString(), cs.LeadMessage);
+                            EmailManager.SendCallNotificationEmail(cs.widget.NotificationEmail, cs.widget.User.Name, cs.LeadName, cs.LeadEmail, cs.LeadPhoneNumber, cs.ScheduledDateTime.ToString(), cs.LeadMessage);
 
                             cs.EmailNotificationDone = true;
                             await context.SaveChangesAsync();
@@ -79,7 +79,7 @@ namespace CallMeAPI.Controllers
                         {
                             //do callback 
 
-                            Call(cs.widget.ID, cs.LeadPhoneNumber, cs.widget.AuthKey, cs.widget.Extension, cs.LeadName);
+                             await Call(cs.widget.ID, cs.LeadPhoneNumber, cs.widget.AuthKey, cs.widget.Extension, cs.LeadName);
 
                             cs.CallDone = true;
                             await context.SaveChangesAsync();
@@ -98,45 +98,11 @@ namespace CallMeAPI.Controllers
             }
         }
 
-        private void sendCallNotificationEmail(string emailTo, string username, string leadname, string leademail,string leadphone,string datetime ,string leadmessage="")
+        private void sendCallNotificationEmail(string notificationEmail, string name, string leadName, string leadEmail, string leadPhoneNumber, string v, string leadMessage)
         {
-            using (var message = new MailMessage())
-            {
-                message.To.Add(new MailAddress(emailTo));
-                message.From = new MailAddress(AuthController.FromEmail, "TalkToLeadsNow Support");
-                message.Subject = "Call Notification";
-                message.Body = "Hello " + username + "!";
-                message.Body += "<br/>";
-                message.Body += "<p>You will have a call to a lead in 15 minutes from talktoleadsnow!</p>";
-                message.Body += "<p>Name: " + leadname + "</p>";
-                message.Body += "<p>Email: " + leademail + "</p>";
-                message.Body += "<p>Phone Number: " + leadphone + "</p>";
-                message.Body += "<p>Call Scheduled at: " + datetime + "</p>";
-
-                if (!string.IsNullOrEmpty(leadmessage))
-                    message.Body += "<p>Message: " + leadmessage + "</p>";
-
-                //message.Body += "<a target='_balnk' href='" + "http://www.talktoleadsnow.com/#/resetpassword/" + token + "'>" + "http://talktoleadsnow.com/#/resetpassword/" + token + "</a>";
-                message.Body += "<p>Regards,</p>";
-                message.Body += "<p>TalkToLeadsNow team.</p>";
-                message.Body += "<a target='_balnk' href='http://www.talktoleadsnow.com'> <img width='200px' src='http://api.talktoleadsnow.com/api/style/images/talktoleadsnow-small.png'></a>";
-                message.Body += "<hr height='1' style='height: 1px; border: 0 none; color: #D7DFE3; background-color: #D7DFE3; margin-top:1.5em; margin-bottom:1.5em;'>";
-               
-                //message.Body += "<p style='color:gray'>" +
-                    //"This email was automatically generated on your request for an account at TalkToLeadsNow. In case you didn't request an account, please ignore this e-mail. Your information will be removed automatically from our database."
-                    //+ "</p>";
-
-                message.IsBodyHtml = true;
-
-                using (var client = new SmtpClient("smtp.gmail.com"))
-                {
-                    client.Port = 587;
-                    client.Credentials = new NetworkCredential(AuthController.FromEmail, AuthController.EmailPassword);
-                    client.EnableSsl = true;
-                    client.Send(message);
-                }
-            }
+            throw new NotImplementedException();
         }
+
 
 
 
@@ -525,7 +491,7 @@ namespace CallMeAPI.Controllers
 
         // POST: /api/callme
         [HttpPost]
-        public string Callme([FromBody]CallmeDTO callInfo)
+        public async Task<string> CallmeAsync([FromBody]CallmeDTO callInfo)
         {
             try
             {
@@ -537,9 +503,7 @@ namespace CallMeAPI.Controllers
                 if (wgt == null)
                     return "NotFound";
 
-                Call(wgt.ID, callInfo.phone, wgt.AuthKey, wgt.Extension, callInfo.name);
-
-
+                await Call(wgt.ID, callInfo.phone, wgt.AuthKey, wgt.Extension, callInfo.name);
 
                 return "OK: Call request sent";
             }
@@ -608,7 +572,7 @@ namespace CallMeAPI.Controllers
             string content = reader.ReadToEnd();
             reader.Close();
 
-            content = content.Replace("$server$", "http://" + host);
+            content = content.Replace("$server$", Program.HTTP_PREFIX + host);
             content = content.Replace("$token$", token);
 
             content = Regex.Replace(content, @"\n|\r", "");
@@ -619,11 +583,15 @@ namespace CallMeAPI.Controllers
             return result;
         }
 
-        public string Call(Guid widgetID, string phoneNumber,string apiKey,string extension, string customerName)//[FromBody]TestCall callInfo)
+            public async Task<string> Call(Guid widgetID, string phoneNumber,string apiKey,string extension, string customerName)//[FromBody]TestCall callInfo)
         {
+            string requestStr = "";
+            string responseStr = "";
+            DateTime now = DateTime.Parse(GetUKDateTime());
+
             try
             {
-                var request = (HttpWebRequest)WebRequest.Create("https://voip.alexvoip.co.uk/api/0.9.3/call");
+                var request = WebRequest.Create("https://call-api.gradwell.com/0.9.3/call");
 
 
                 if (!phoneNumber.Trim().StartsWith("0"))
@@ -639,33 +607,47 @@ namespace CallMeAPI.Controllers
                     + "cidname=" + customerName + sep
                     + "wait=0";
 
-                var data = Encoding.ASCII.GetBytes(postData);
+                requestStr = postData;
+
+
+                if (phoneNumber.Trim().Length < 5)
+                {
+                    throw new Exception("Error : Invalid Phone Number!");
+                }
+
+                var data = Encoding.UTF8.GetBytes(postData);
 
                 request.Method = "POST";
                 request.ContentType = "application/x-www-form-urlencoded";
 
                 request.ContentLength = data.Length;
 
-                using (var stream = request.GetRequestStream())
+                using (var stream = await request.GetRequestStreamAsync())
                 {
                     stream.Write(data, 0, data.Length);
+
+
+                    var response = await request.GetResponseAsync();
+                    var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+
+                    Widget widget = context.Widgets.Find(widgetID);
+                    widget.CallsCount = widget.CallsCount + 1;
+                    context.SaveChanges();
+
+                    responseStr = responseString;
+
+                    return responseString;
                 }
-
-                var response = (HttpWebResponse)request.GetResponse();
-                var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                System.Diagnostics.Trace.TraceInformation("CallAPI Done : " + DateTime.Now.ToString()  + " :  "+ responseString);
-
-
-                Widget widget = context.Widgets.Find(widgetID);
-                widget.CallsCount = widget.CallsCount + 1;
-                context.SaveChanges();
-
-                return responseString;
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.TraceError("CallAPI Error: "+ DateTime.Now.ToString() + " :  " + ex.ToString());
+                responseStr = ex.Message;
                 throw ex;
+            }
+            finally{
+                CallLog log = new CallLog { Request = requestStr, Response = responseStr, ReqDateTime = now };
+                context.CallLogs.Add(log);
+                await context.SaveChangesAsync();
             }
         }
     
@@ -676,45 +658,57 @@ namespace CallMeAPI.Controllers
 
         // POST: /api/callme/test
         [HttpGet("test")]
-        public  string CallmeTest()//[FromBody]TestCall callInfo)
+        public async Task<string> CallmeTestAsync()//[FromBody]TestCall callInfo)
         {
             try
             {
+
                 TestCall callInfo = new TestCall();
                // callInfo.srcPhone = "07825199046";
-                callInfo.destPhone = "07469721240";
+                //callInfo.destPhone = "07469721240";
+                callInfo.destPhone = "07469721241";
 
 
-                var request = (HttpWebRequest)WebRequest.Create("https://call-api.gradwell.com/0.9.3/call");
+                var request = WebRequest.Create("https://call-api.gradwell.com/0.9.3/call");
 
                 // for example, assumes that postData value is "param1=value1;param2=value2"
 
                 string sep = "&";
 
-                var postData = "auth=3I5J6PFFB7OZ00WGSNGYU5EUU6" + sep
-                                + "extension=2034389" + sep
-                                + "destination=" + callInfo.destPhone + sep
-                                + "cidname=alireza" + sep
-                              //  + "source=" + callInfo.srcPhone + sep
-                                + "wait=0";
+                //var postData = "auth=3I5J6PFFB7OZ00WGSNGYU5EUU6" + sep
+                //  + "extension=2034389" + sep
+                //  + "destination=" + callInfo.destPhone + sep
+                //  + "cidname=alireza" + sep
+                ////  + "source=" + callInfo.srcPhone + sep
+                //+ "wait=0";
 
-                var data = Encoding.ASCII.GetBytes(postData);
+
+                var postData = "auth=3I5J6PFFB7OZ00WGSNGYU5EUU89" + sep
+                + "extension=2034355" + sep
+                    + "destination=" + callInfo.destPhone + sep
+                 + "cidname=alireza" + sep
+                //  + "source=" + callInfo.srcPhone + sep
+                + "wait=0";
+
+                UTF8Encoding enc = new UTF8Encoding();
 
                 request.Method = "POST";
                 //request.ContentType = "application/json";
                 request.ContentType = "application/x-www-form-urlencoded";
 
-                request.ContentLength = data.Length;
-
-                using (var stream = request.GetRequestStream())
+                using (var stream = await request.GetRequestStreamAsync())
                 {
-                    stream.Write(data, 0, data.Length);
+                    stream.Write(enc.GetBytes(postData), 0, postData.Length);
+
+
+                    var response = await request.GetResponseAsync();
+
+                    Stream receiveStream = response.GetResponseStream();
+                    StreamReader reader = new StreamReader(receiveStream, Encoding.UTF8);
+                    string responseString = reader.ReadToEnd();
+
+                    return responseString;
                 }
-
-                var response = (HttpWebResponse)request.GetResponse();
-                var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-
-                return responseString;
             }
             catch(Exception ex)
             {

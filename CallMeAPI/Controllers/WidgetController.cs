@@ -22,8 +22,6 @@ namespace CallMeAPI.Controllers
             this.context = _context;
         }
 
-
-
         // GET: api/widget/new
         [HttpGet("new")]
         public async Task<IEnumerable<WidgetDTO>> GetAllWidgetsNew()
@@ -109,7 +107,7 @@ namespace CallMeAPI.Controllers
 
             Widget widget = await context.Widgets
                                          .Include(e => e.User)
-                                         .SingleOrDefaultAsync(e => e.ID.ToString() == id);
+                                         .FirstOrDefaultAsync(e => e.ID.ToString() == id);
 
             return new WidgetDTO(widget);
         }
@@ -197,12 +195,26 @@ namespace CallMeAPI.Controllers
         {
             AuthController.ValidateAndGetCurrentUserName(this.HttpContext.Request);
 
-            Widget widget = context.Widgets.Find(Guid.Parse(id));
+            Widget widget = await context.Widgets
+                                         .Include(e => e.User)
+                                         .FirstOrDefaultAsync(e => e.ID.ToString() == id);
+
             if (widget == null)
                 return NotFound();
 
             widget.AuthKey = widgetDTO.AuthKey;
             widget.Extension = widgetDTO.Extension;
+
+            try{
+                
+                EmailManager.SendActivationWidgetNotification(widget);
+            }
+            catch(Exception)
+            {
+                
+            }
+
+
 
             await context.SaveChangesAsync();
             return Ok();
@@ -210,16 +222,28 @@ namespace CallMeAPI.Controllers
 
 
 
+
+
         // DELETE api/widget/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            AuthController.ValidateAndGetCurrentUserName(this.HttpContext.Request);
+            try
+            {
+                AuthController.ValidateAndGetCurrentUserName(this.HttpContext.Request);
 
 
-            context.Widgets.Remove(context.Widgets.Find(Guid.Parse(id)));
-            await context.SaveChangesAsync();
-            return Ok();
+                List<CallbackSchedule> callbackSchedules = await context.CallbackSchedules.Where(cs => cs.widgetID == Guid.Parse(id)).ToListAsync();
+
+                context.CallbackSchedules.RemoveRange(callbackSchedules);
+                context.Widgets.Remove(context.Widgets.Find(Guid.Parse(id)));
+
+                await context.SaveChangesAsync();
+                return Ok();
+            }catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
     }

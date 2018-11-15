@@ -6,7 +6,7 @@ $(document).ready(function() {
 });
 
 
-function callMeNow(){
+function callMeNow891(){
 
 	
 ReqUrl = "'" +  window.location + "'";
@@ -18,10 +18,10 @@ ReqUrl = "'" +  window.location + "'";
         type: "POST",
         data:  JSON.stringify({
 			site : ReqUrl,
-            token : $('#token').val(),
-            name : $('#name').val(),
-            email : $('#email').val(),
-            phone : $('#phone').val()
+            token : $('#talktoleadsnow_token').val(),
+            name : $('#talktoleadsnow_name').val(),
+            email : $('#talktoleadsnow_email').val(),
+            phone : $('#talktoleadsnow_phone').val()
 		  }),
         headers: {
 			'Accept': 'application/json',
@@ -37,7 +37,7 @@ ReqUrl = "'" +  window.location + "'";
 				document.body.appendChild(div10);
 				$('#callackonnecting').html('<div id="id02" class="w3-modalwg"><div class="w3-modal-contentwg w3-animate-bottomwg w3-card-4wg"><header style="background:#fff !important;" class="w3-containerwg w3-tealwg"><span style="margin:center !important" onclick="closeconnectingbox()" class="w3-buttonwg-close w3-display-topwg">&times;</span></header><div class="w3-containerwg"><div class="call-me" style="display: block;"><div class="call-back"><div id="callme"><div id="callmeMain"/></div></div></div></div><footer style="background:#fff !important;"  class="w3-containerwg w3-tealwg footerwg"><div class="h2wg" style="text-align: center;"><h4> We are connecting you... </h4></div></footer></div></div></div>');
 				document.getElementById('id02').style.display='block';
-                setTimeout('window.location = self.location.href',20000);
+                setTimeout("$('#callackonnecting').remove()",20000);
 				
             }else{
 			   
@@ -47,7 +47,7 @@ ReqUrl = "'" +  window.location + "'";
 					document.body.appendChild(div10);
 					$('#callackonnecting').html('<div id="id02" class="w3-modalwg"><div class="w3-modal-contentwg w3-animate-bottomwg w3-card-4wg"><header style="background:#fff !important;" class="w3-containerwg w3-tealwg"><span style="margin:center !important" onclick="closeconnectingbox()" class="w3-buttonwg-close w3-display-topwg">&times;</span></header><div class="w3-containerwg"><h4 style="color:red;text-align:center;">Sorry, something went wrong! Please try again later<h4><div class="h2wg" style="text-align: center;"/><footer  style="background:#fff !important;" class="w3-containerwg w3-tealwg footerwg"/></div></div></div></div>');
 					document.getElementById('id02').style.display='block';
-					setTimeout('window.location = self.location.href',4000);
+					setTimeout("$('#callackonnecting').remove()",4000);
                 
             }
         },
@@ -72,7 +72,7 @@ ReqUrl = "'" +  window.location + "'";
 
 
 function validateCallMeForm(){
-	hidecallme();
+	// hidecallme();
 	$.validator.addMethod("emailRegex",function(value, element) {
         if(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test( value ))
         { return true;} else{ return false;}
@@ -114,19 +114,19 @@ function validateCallMeForm(){
 
         rules: {
 
-            name: {
+            talktoleadsnowname: {
 
                 required: true,
                 nameRegex : true
 
             },
-            phone: {
+            talktoleadsnowphone: {
 
                 required: true,
                 phoneRegex: true
 
             },
-            email: {
+            talktoleadsnowemail: {
 
                 required: true,
                 email:true
@@ -135,7 +135,7 @@ function validateCallMeForm(){
 
         },
 
-        submitHandler: callMeNow
+        submitHandler: callMeNow891
     });
 }
 

@@ -26,9 +26,6 @@ namespace CallMeAPI.Controllers
     public class AuthController : Controller
     {
 
-        public static string FromEmail = "m.jafarabdi@gmail.com";
-        public static string EmailPassword = "amamja63";
-
         private readonly MyDBContext contextUsers;
         IConfiguration configuration;
 
@@ -112,47 +109,53 @@ namespace CallMeAPI.Controllers
         [Route("login")]
         public IActionResult Login([FromBody]LoginDTO user)
         {
-            if (user == null)
+            try
             {
-                return BadRequest("Invalid client request");
-            }
+                if (user == null)
+                {
+                    return BadRequest("Invalid client request");
+                }
 
-            var _user = contextUsers.Users.Find(user.UserName);
+                var _user = contextUsers.Users.Find(user.UserName);
 
-            if (_user == null)
+                if (_user == null)
+                {
+                    return NotFound();
+                }
+
+                if (!_user.IsActive)
+                {
+                    return NotFound();
+                }
+
+                if (user.Password == _user.Password)
+                {
+                    var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
+                    var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+
+                    List<Claim> claims = new List<Claim>();
+                    claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.UserName));
+
+                    var tokeOptions = new JwtSecurityToken(
+                        issuer: configuration["Jwt:Issuer"],
+                        audience: configuration["Jwt:Issuer"],
+                        claims: claims,
+                        expires: DateTime.Now.AddHours(10),
+                        signingCredentials: signinCredentials
+                    );
+
+                    _user.LastLogon = DateTime.Now;
+                    contextUsers.SaveChanges();
+                    var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
+                    return Ok(new { Token = tokenString, Name = _user.Name });
+                }
+                else
+                {
+                    return Unauthorized();
+                }
+            }catch (Exception ex)
             {
-                return NotFound();
-            }
-
-            if (!_user.IsActive)
-            {
-                return NotFound();
-            }
-
-            if (user.Password == _user.Password)
-            {
-                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
-                var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-
-                List<Claim> claims = new List<Claim>();
-                claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.UserName));
-
-                var tokeOptions = new JwtSecurityToken(
-                    issuer: configuration["Jwt:Issuer"],
-                    audience: configuration["Jwt:Issuer"],
-                    claims: claims,
-                    expires: DateTime.Now.AddHours(10),
-                    signingCredentials: signinCredentials
-                );
-
-                _user.LastLogon = DateTime.Now;
-                contextUsers.SaveChanges();
-                var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
-                return Ok(new { Token = tokenString , Name = _user.Name });
-            }
-            else
-            {
-                return Unauthorized();
+                throw ex;
             }
         }
 
@@ -201,7 +204,7 @@ namespace CallMeAPI.Controllers
 
             try
             {
-                sendActivationlinkEmail(registerInfo.Email,user.Name, token.ToString());
+                EmailManager.SendActivationlinkEmail(registerInfo.Email,user.Name, token.ToString());
             }
             catch (Exception ex)
             {
@@ -242,7 +245,7 @@ namespace CallMeAPI.Controllers
 
             try
             {
-                sendResetPasswordLinkEmail(email.Email,user.Name,token.ToString());
+                EmailManager.SendResetPasswordLinkEmail(email.Email,user.Name,token.ToString());
             }
             catch (Exception ex)
             {
@@ -263,67 +266,6 @@ namespace CallMeAPI.Controllers
         }
 
 
-        private void sendResetPasswordLinkEmail(string emailTo,string username,string token)
-        {
-            using (var message = new MailMessage())
-            {
-                message.To.Add(new MailAddress(emailTo));
-                message.From = new MailAddress(FromEmail, "TalkToLeadsNow Support");
-                message.Subject = "Reset Password";
-                message.Body = "Hello " + username + "!";
-                message.Body += "<br/>";
-                message.Body += "<p>Please click the link below to reset your password, and set a new password for your TalkToLeadsNow account!</p>";
-                message.Body += "<a target='_balnk' href='" + "http://portal.talktoleadsnow.com/#/resetpassword/" + token + "'>" + "http://portal.talktoleadsnow.com/#/resetpassword/" + token + "</a>";
-                message.Body += "<p>Regards,</p>";
-                message.Body += "<p>TalkToLeadsNow team.</p>";
-                message.Body += "<a target='_balnk' href='http://www.talktoleadsnow.com'> <img width='200px' src='http://api.talktoleadsnow.com/api/style/images/talktoleadsnow-small.png'></a>";
-                message.Body += "<hr height='1' style='height: 1px; border: 0 none; color: #D7DFE3; background-color: #D7DFE3; margin-top:1.5em; margin-bottom:1.5em;'>";
-                message.Body += "<p style='color:gray'>" +
-                    "This email was automatically generated on your request for an account at TalkToLeadsNow. In case you didn't request an account, please ignore this e-mail. Your information will be removed automatically from our database."
-                    + "</p>";
-
-                message.IsBodyHtml = true;
-
-                using (var client = new SmtpClient("smtp.gmail.com"))
-                {
-                    client.Port = 587;
-                    client.Credentials = new NetworkCredential(FromEmail, EmailPassword);
-                    client.EnableSsl = true;
-                    client.Send(message);
-                }
-            }
-        }
-
-        private void sendActivationlinkEmail(string emailTo,string username,string token)
-        {
-            using (var message = new MailMessage())
-            {
-                message.To.Add(new MailAddress(emailTo));
-                message.From = new MailAddress(FromEmail,"TalkToLeadsNow Support");
-                message.Subject = "Account Activation";
-                message.Body = "Hello " + username + "!";
-                message.Body += "<br/>";
-                message.Body += "<p>Please click the link below to activate your account, and start using TalkToLeadsNow!</p>";
-                message.Body += "<a target='_balnk' href='" + "http://portal.talktoleadsnow.com/#/activationlink/" + token + "'>"+  "http://portal.talktoleadsnow.com/#/activationlink/" + token  +"</a>";
-                message.Body += "<p>Regards,</p>";
-                message.Body += "<p>TalkToLeadsNow team.</p>";
-                message.Body += "<a target='_balnk' href='http://talktoleadsnow.com'> <img width='200px' src='http://api.talktoleadsnow.com/api/style/images/talktoleadsnow-small.png'></a>";
-                message.Body += "<hr height='1' style='height: 1px; border: 0 none; color: #D7DFE3; background-color: #D7DFE3; margin-top:1.5em; margin-bottom:1.5em;'>";
-                message.Body += "<p style='color:gray'>" +
-                    "This email was automatically generated on your request for an account at TalkToLeadsNow. In case you didn't request an account, please ignore this e-mail. Your information will be removed automatically from our database."
-                    + "</p>";
-
-                message.IsBodyHtml = true;
-
-                using (var client = new SmtpClient("smtp.gmail.com"))
-                {
-                    client.Port = 587;
-                    client.Credentials = new NetworkCredential(FromEmail, EmailPassword);
-                    client.EnableSsl = true;
-                    client.Send(message);
-                }
-            }
-        }
 
 
 
@@ -334,7 +276,7 @@ namespace CallMeAPI.Controllers
             var accessToken = "";
             var username = "";
 
-            if (Authtoken.ToString().StartsWith("Bearer:"))
+            if (Authtoken.ToString().StartsWith("Bearer"))
             {
                 accessToken = Authtoken.ToString().Substring(7);
             }

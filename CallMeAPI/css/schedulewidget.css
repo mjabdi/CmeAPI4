@@ -39,7 +39,9 @@
   line-height: 1.4em;
   color: #666A73;
   word-wrap: break-word;
-  word-break: break-word; }
+  word-break: break-word; 
+  padding: 100px 5px 5px 5px !important;
+}
 .h2wg {
   font-weight: bold; }
 .h2wg {
@@ -72,11 +74,11 @@ i {
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
-[class^="icon-"]:hover:before {
+  .icon-arrow-rightwg:hover:before {
     text-decoration: none; }
 
 .icon-arrow-rightwg:before {
-  content: "\EA3C"; }
+  content: "\2713"; }
 .periodwg {
   position: relative;
   /* padding: 0px 30px 20px 30px; */
@@ -159,6 +161,11 @@ i {
     height: 35px !important ;
  }
  
+.availablewg
+{
+  color : #00A2FF;
+}
+
  .periodwg .fractionwg.unavailablewg .daywg {
       border-color: #a8a8a8;
       color: #a8a8a8;
@@ -188,7 +195,7 @@ right: 25px; }}
 		     padding-top: 25px !Important;
 	 }
 
-   #schedule_calltime
+   #schedule_time
    {
      margin-top : 5px !important;
      -webkit-animation: bounceInUp891 0.9s ease-in-out;
@@ -238,7 +245,13 @@ right: 25px; }}
      animation: jackInTheBox891 0.9s ease-in-out;
    }
 
-
+.text-outofworkhour
+{
+  display: inline-block;
+  text-align: center !important;
+  padding-left : 30px;
+  
+}
 
    @-webkit-keyframes bounceInUp891 {
     from,

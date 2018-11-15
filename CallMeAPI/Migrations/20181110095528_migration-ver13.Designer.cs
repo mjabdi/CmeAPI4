@@ -4,14 +4,16 @@ using CallMeAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CallMeAPI.Migrations
 {
     [DbContext(typeof(MyDBContext))]
-    partial class MyDBContextModelSnapshot : ModelSnapshot
+    [Migration("20181110095528_migration-ver13")]
+    partial class migrationver13
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -137,21 +139,6 @@ namespace CallMeAPI.Migrations
                     b.HasKey("Token");
 
                     b.ToTable("SecurityLinkTokens");
-                });
-
-            modelBuilder.Entity("CallMeAPI.Models.StripeEventLog", b =>
-                {
-                    b.Property<long>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Event");
-
-                    b.Property<DateTime>("EventDateTime");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("StripeEventLogs");
                 });
 
             modelBuilder.Entity("CallMeAPI.Models.User", b =>

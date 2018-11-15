@@ -1,6 +1,6 @@
 @charset "UTF-8";
 
-.iconcallwg a b, .iconcallwg a p{
+/* .iconcallwg a b, .iconcallwg a p{
     font-size: 12px!important;
 }
 
@@ -10,17 +10,18 @@
 }
 .iconcallwg a b, .iconcallwg a p{
     font-size: 10px!important;
-}
+} */
+
 .iconcallwg{
 position: fixed;
-right: 78px;
-bottom: 75px;
+right: 73px;
+bottom: 73px;
 text-align: center;
 cursor: pointer;
-
+z-index : 99999;
 }
 
-.iconcallwg a p {
+/* .iconcallwg a p {
 color: $colortext$;
 font-size: 10px;
 background:$colorwidget$;
@@ -28,7 +29,88 @@ margin-top: 10px;
 padding: 10px 10px;
 border-radius: 5px;
 text-transform: uppercase;
+} */
+
+.talktoleadsnow-branding
+{
+position: fixed;
+right: 51px;
+bottom: 43px;
+text-align: center;
+cursor: pointer;
+background-color: rgb(48, 104, 150) !important; 
+border-radius: 4px;
+box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.4);
+z-index : 99999;
 }
+
+.talktoleadsnow-branding a {
+    color: rgb(230, 230, 230);
+    background: rgb(48, 104, 150) !important; 
+    padding-top: 7px;
+    padding-bottom: 22px;
+
+    padding-left: 18px;
+    border-radius: 4px;
+    font-size: 12px !important;
+    margin: auto;
+    display: inline-block;
+    min-width: 100px;
+    max-height: 25px !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    -webkit-font-smoothing: antialiased !important;
+    position: relative !important;
+    left: -5px !important;
+    box-sizing : border-box !important;
+    text-decoration: none !important;
+ }
+
+ .talktoleadesnow-brand-bg
+ {
+     position: fixed;
+     right: 188px;
+     bottom: 47px;
+     z-index: 99999;
+     width: 20px;
+     height: 22px;     
+ }
+
+
+ .talktoleadesnow-brand-bg-dialog
+ {
+     position: absolute;
+     right: 142px;
+     bottom: 5px;
+     z-index: 99999;
+     width: 20px;
+     height: 22px;     
+ }
+
+ .talktoleadsnow-brand-logo
+ {
+     font-size: 12px !important;
+     position: relative;
+     background-color : rgb(48, 104, 150) !important; 
+     margin-bottom : 5px;
+     padding: 5px;
+     border-radius: 4px;
+     width: 160px;
+     bottom : 0px;
+     right : 0px;
+     text-align: right;
+     color: rgb(230, 230, 230) !important;
+ }
+ .talktoleadsnow-brand-logo a{
+    color: rgb(230, 230, 230) !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    -webkit-font-smoothing: antialiased !important;
+    box-sizing : border-box !important;
+    text-decoration: none !important;
+    color : white;
+ }
+
+
+
 
 #talktousnow
 {
@@ -55,14 +137,16 @@ position: relative !important;
 left: -5px !important;
 box-sizing : border-box !important;
 }
-.iconcallwg a b, .iconcallwg a p{
+
+/* .iconcallwg a b, .iconcallwg a p{
     font-size: 12px!important;
 }
 
 .iconcallwg a p{
     margin-top: 5px!important;
     padding: 3px!important;
-}
+} */
+
 .call-me{
     display: none;
 }
@@ -121,7 +205,7 @@ position: relative;
 
 
 .footerwg{margin:center;display:block;}
-.buttonwg,input{font:inherit;margin:0}
+.buttonwg,input{font:inherit;margin:0;cursor: pointer;}
 .buttonwg,input{overflow:visible}button{text-transform:none}
 .buttonwg{-webkit-appearance:button}
 .buttonwg::-moz-focus-inner{border-style:none;padding:0}
@@ -131,18 +215,18 @@ position: relative;
 /* End extract */
 
 .h2wg{font-family:'Proxima Nova', sans-serif !important;font-size:20px !important;font-weight:400;margin:20px 0;text-align:center; color:#ff6600!important; background: inhert !important;-webkit-animation: tada891 1s ease-in; animation: tada891 1s ease-in; }
-.w3-buttonwg{margin-top: 20px; margin-bottom:20px; width: 100% ; border: 1px solid #ff6600!important;display:inline-block;padding:8px 16px;vertical-align:middle;overflow:hidden;text-decoration:none;color:inherit;background-color:inherit;text-align:center;cursor:pointer;white-space:nowrap}
-.w3-buttonwg-close{border:none;display:inline-block;padding:8px 16px;vertical-align:middle;overflow:hidden;text-decoration:none;color:#ff6600; font-size:22px  ;background-color:inherit;text-align:center;cursor:pointer;white-space:nowrap}
+.w3-buttonwg{margin-top: 20px; margin-bottom:5px; width: 100% ; border: 1px solid #ff6600!important;display:inline-block;padding:8px 16px;vertical-align:middle;overflow:hidden;text-decoration:none;color:inherit;background-color:inherit;text-align:center;cursor:pointer;white-space:nowrap}
+.w3-buttonwg-close{border:none;display:inline-block;padding:0px 10px ; vertical-align:middle;overflow:hidden;text-decoration:none;color:gray; font-size:20px  ;background-color:transparent;text-align:center;cursor:pointer;white-space:nowrap}
 
 .w3-buttonwg{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}   
 .w3-buttonwg:disabled{cursor:not-allowed;opacity:0.3}:disabled *{pointer-events:none}
 .w3-inputwg{padding:8px;display:block;border:none;border-bottom:1px solid #ccc;width:100%}
 
-.w3-modalwg{z-index:99999;display:none;padding-top:12%;position:fixed !important; margin : 0 auto; left:0;top:0;width:100%; ;height:100%;overflow:auto;background-color:rgb(0,0,0);background-color:rgba(21, 16, 16, 0.70)}
-.w3-modal-contentwg{margin:auto;background-color:#fff;position:relative; top:-80px; padding:0;outline:0;width:800px !important}
+.w3-modalwg{z-index:99999;display:none;padding-top:200px;position:fixed !important; margin : 0 auto; left:0;top:0;width:100%; ;height:100%;overflow:auto;background-color:rgb(0,0,0);background-color:rgba(21, 16, 16, 0.70)}
+.w3-modal-contentwg{margin:auto;background-color:#fff;position:relative; top:-80px; padding:0;outline:0;max-width:900px !important}
 .w3-containerwg:after,.w3-containerwg:before{content:"";display:table;clear:both}
-@media (max-width:600px){.w3-modal-contentwg{margin:0 10px;width:auto!important}.w3-modalwg{padding-top:30px}}
-@media (max-width:768px){.w3-modal-contentwg{width:500px}.w3-modalwg{padding-top:50px}}
+@media (max-width:600px){.w3-modal-contentwg{margin:2px 10px;width:auto!important}.w3-modalwg{padding-top:100px}}
+@media (max-width:768px){.w3-modal-contentwg{width:500px}.w3-modalwg{padding-top:100px}}
 
 @media (min-width:993px){.w3-modal-contentwg{width:525px}}.w3-display-toprightwg{position:absolute;right:0;top:0}.w3-round-xxlargewg{border-radius:32px}
 @media (min-width:993px){.w3-modal-contentwg{width:525px}}.w3-display-topwg{position:absolute;right:0;top:0;z-index:9999;}.w3-round-xxlargewg{border-radius:32px}
@@ -159,7 +243,6 @@ position: relative;
 .w3-tealwg{color:#fff!important;background-color:#9e9e9e!important}
 
 .helpError{color:red;font-size:11;}
-
 
 .phonebox{
     padding-bottom: 30px;
@@ -191,7 +274,7 @@ position: relative;
         width : 100% !important;
         height: 30px !important;
         margin-top : 0px !important;
-        margin-bottom : 20px !important;
+        margin-bottom : 5px !important;
     }
 
 
