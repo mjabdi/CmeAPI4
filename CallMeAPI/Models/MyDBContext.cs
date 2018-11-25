@@ -24,6 +24,7 @@ namespace CallMeAPI.Models
         public virtual DbSet<CallbackSchedule> CallbackSchedules { get; set; }
         public virtual DbSet<CallLog> CallLogs { get; set; }
         public virtual DbSet<StripeEventLog> StripeEventLogs { get; set; }
+        public virtual DbSet<CallMeAPI.Models.Subscription> Subscriptions { get; set; }
 
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CallMeAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
 
@@ -12,51 +13,176 @@ namespace CallMeAPI.Controllers
     [Route("api/stripepayment")]
     public class StripeController : Controller
     {
-        [HttpPost("charge")]
-        public IActionResult Charge([FromBody] ChargeRequest req)
+
+        private MyDBContext context;
+
+        public StripeController(MyDBContext _context)
+        {
+            context = _context;
+        }
+
+
+        [HttpPost("createcustomer")]
+        public async Task<IActionResult> CreateCustomerAsync([FromBody] CustomerRequest req)
         {
             try
-            {
+              {
+                AuthController.ValidateAndGetCurrentUserName(this.HttpContext.Request);
+                var email = this.HttpContext.Request.Headers["From"];
+
+                var user = context.Users.Find(email);
+
+                if (user == null)
+                    return NotFound();
+
                 var customers = new CustomerService();
-                var charges = new ChargeService();
-                var subscriptions = new SubscriptionService();
+                var customerID = "";
 
-                var customer = customers.Create(new CustomerCreateOptions
+                if (string.IsNullOrEmpty(user.CustomerID))
                 {
-                    Email = "m.jafarabdi@gmail.com",
-                    SourceToken = req.s_token
-                });
+                    var customer = await customers.CreateAsync(new CustomerCreateOptions
+                    {
+                        Email = email,
+                        SourceToken = req.s_token
+                    });
 
-                SubscriptionCreateOptions mysub = new SubscriptionCreateOptions();
-                mysub.CustomerId = customer.Id;
-                mysub.Items = new List<SubscriptionItemOption>();
-                mysub.TrialFromPlan = true;
-       
-                mysub.Items.Add(new SubscriptionItemOption { PlanId = Models.Subscription.Plan_LargeBusiness,Quantity = 1 }); 
-                var subscription = subscriptions.Create(mysub);
-                                                     
+                    customerID = customer.Id;
+                    user.CustomerID = customerID;
+                }
+                else
+                {
+                    var customer = await customers.UpdateAsync(user.CustomerID, new CustomerUpdateOptions
+                    {
+                        Email = email,
+                        SourceToken = req.s_token
+                    });
+                }
 
-
-                //var charge = charges.Create(new ChargeCreateOptions
-                //{
-                //    Amount = 500,
-                //    Description = "Sample Charge",
-                //    Currency = "gbp",
-                //    CustomerId = customer.Id
-                //});
-
-
+                await context.SaveChangesAsync();
 
                 return Ok();
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }
         }
+ 
+
+        [HttpPost("subscribe")]
+        public async Task<IActionResult> SubscribeAsync([FromBody] SubscribeRequest req)
+        {
+            try
+            {
+                AuthController.ValidateAndGetCurrentUserName(this.HttpContext.Request);
+                var email = this.HttpContext.Request.Headers["From"];
+
+                var user = await context.Users.FindAsync(email);
+
+                if (user == null)
+                    return NotFound();
+
+                for (int i = 0; i < 3; i++)
+                {
+                    if (string.IsNullOrEmpty(user.CustomerID))
+                    {
+                        await Task.Delay(2000);
+                        user = await context.Users.FindAsync(email);
+                    }
+                }
+
+                if (string.IsNullOrEmpty(user.CustomerID))
+                {
+                    return NotFound();
+                }
+
+                var prevsub = context.Subscriptions.FirstOrDefault(sub => sub.CustomerEmail == email);
+                bool newCustomer = (prevsub == null);
+
+                var subscriptions = new SubscriptionService();
+
+                var customerID = user.CustomerID;
+
+                SubscriptionCreateOptions mysub = new SubscriptionCreateOptions();
+                mysub.CustomerId = customerID;
+                mysub.Items = new List<SubscriptionItemOption>();
+                mysub.TrialFromPlan = newCustomer;
+
+                mysub.Items.Add(new SubscriptionItemOption { PlanId = req.planId, Quantity = 1 });
+                var subscription = await subscriptions.CreateAsync(mysub);
+
+                await context.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        [HttpPost("unsubscribe")]
+        public async Task<IActionResult> UnSubscribeAsync([FromBody] UnSubscribeRequest req)
+        {
+            try
+            {
+                AuthController.ValidateAndGetCurrentUserName(this.HttpContext.Request);
+                var email = this.HttpContext.Request.Headers["From"];
+
+                var user = await context.Users.FindAsync(email);
+
+                if (user == null)
+                    return NotFound();
+
+                for (int i = 0; i < 3; i++)
+                {
+                    if (string.IsNullOrEmpty(user.CustomerID))
+                    {
+                        await Task.Delay(2000);
+                        user = await context.Users.FindAsync(email);
+                    }
+                }
+
+                if (string.IsNullOrEmpty(user.CustomerID))
+                {
+                    return NotFound();
+                }
+
+                var subscriptions = new SubscriptionService();
+
+                await subscriptions.CancelAsync(req.subscriptionId, new SubscriptionCancelOptions());
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
     }
 
-    public class ChargeRequest
+
+
+
+
+    public class CustomerRequest
     {
-        public string s_token { get; set; }        
+        public string s_token { get; set; }  
     }
+
+    public class SubscribeRequest
+    {
+        public string planId { get; set; }
+    }
+
+    public class UnSubscribeRequest
+    {
+        public string subscriptionId { get; set; }
+    }
+
+
 }

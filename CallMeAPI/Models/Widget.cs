@@ -41,6 +41,8 @@ namespace CallMeAPI.Models
 
         public string WeekDays { get; set; }
 
+        public string subscriptionId { get; set; }
+
         public Widget()
         {
             
@@ -64,6 +66,7 @@ namespace CallMeAPI.Models
             CreationDateTime = DateTime.Now;
             NotificationEmail = widgetDTO.NotificationEmail;
             WeekDays = WeekDay.ConvertToString(widgetDTO.WeekDays);
+            subscriptionId = widgetDTO.subscriptionId;
         }
 
         public void updateFromWidgetDTO(WidgetDTO widget)
@@ -82,6 +85,8 @@ namespace CallMeAPI.Models
             NotificationEmail = widget.NotificationEmail;
 
             WeekDays = WeekDay.ConvertToString(widget.WeekDays);
+
+            subscriptionId = widget.subscriptionId;
         }
     }
 }

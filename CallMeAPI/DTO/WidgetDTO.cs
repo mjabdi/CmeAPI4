@@ -27,6 +27,7 @@ namespace CallMeAPI.DTO
             AuthKey = widget.AuthKey;
             Extension = widget.Extension;
             NotificationEmail = widget.NotificationEmail;
+            subscriptionId = widget.subscriptionId;
 
             string week_days = widget.WeekDays;
             if (string.IsNullOrEmpty(week_days))
@@ -71,6 +72,8 @@ namespace CallMeAPI.DTO
         public string Extension { get; set; }
 
         public string NotificationEmail { get; set; }
+
+        public string subscriptionId { get; set; }
 
 
 

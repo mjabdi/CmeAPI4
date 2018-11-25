@@ -220,10 +220,6 @@ namespace CallMeAPI.Controllers
             return Ok();
         }
 
-
-
-
-
         // DELETE api/widget/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)

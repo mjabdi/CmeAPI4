@@ -11,4 +11,4 @@
 /Users/mohammad/Projects/CallMeAPI/CallMeAPI/obj/Debug/netcoreapp2.1/CallMeAPI.RazorTargetAssemblyInfo.cache
 /Users/mohammad/Projects/CallMeAPI/CallMeAPI/obj/Debug/netcoreapp2.1/CallMeAPI.dll
 /Users/mohammad/Projects/CallMeAPI/CallMeAPI/obj/Debug/netcoreapp2.1/CallMeAPI.pdb
-/Users/mohammad/Projects/CallMeAPI/CallMeAPI/obj/Debug/netcoreapp2.1/CallMeAPI.csprojResolveAssemblyReference.cache
+/Users/mohammad/Projects/CallMeAPI/CallMeAPI/obj/Debug/netcoreapp2.1/CallMeAPI.csprojAssemblyReference.cache

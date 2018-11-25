@@ -22,7 +22,7 @@ namespace CallMeAPI.Models
 
         public string Role { get; set; }
 
-        //public string CustomerID { get; set; }
+        public string CustomerID { get; set; }
 
     }
 }
