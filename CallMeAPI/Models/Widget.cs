@@ -32,6 +32,8 @@ namespace CallMeAPI.Models
 
         public int CallsCount { get; set; }
 
+        public int CallsCountMonth { get; set; }
+
         public DateTime CreationDateTime { get; set; }
 
         public string AuthKey { get; set; }
@@ -63,6 +65,7 @@ namespace CallMeAPI.Models
             ColorText = widgetDTO.ColorText;
             IsAnimated = widgetDTO.IsAnimated;
             CallsCount = 0;
+            CallsCountMonth = 0;
             CreationDateTime = DateTime.Now;
             NotificationEmail = widgetDTO.NotificationEmail;
             WeekDays = WeekDay.ConvertToString(widgetDTO.WeekDays);

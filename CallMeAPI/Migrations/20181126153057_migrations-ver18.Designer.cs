@@ -4,37 +4,22 @@ using CallMeAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CallMeAPI.Migrations
 {
     [DbContext(typeof(MyDBContext))]
-    partial class MyDBContextModelSnapshot : ModelSnapshot
+    [Migration("20181126153057_migrations-ver18")]
+    partial class migrationsver18
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.3-rtm-32065")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("CallMeAPI.Models.AppException", b =>
-                {
-                    b.Property<long>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("ErrorDateTime");
-
-                    b.Property<string>("FullString");
-
-                    b.Property<string>("Message");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("AppExceptions");
-                });
 
             modelBuilder.Entity("CallMeAPI.Models.CallbackSchedule", b =>
                 {
@@ -136,30 +121,6 @@ namespace CallMeAPI.Migrations
                     b.HasIndex("WidgetID");
 
                     b.ToTable("EventLogs");
-                });
-
-            modelBuilder.Entity("CallMeAPI.Models.Invoice", b =>
-                {
-                    b.Property<string>("InvoiceID")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<decimal>("AmountPaid");
-
-                    b.Property<string>("CustomerID");
-
-                    b.Property<string>("Description");
-
-                    b.Property<DateTime>("InvoiceDateTime");
-
-                    b.Property<string>("InvoicePdf");
-
-                    b.Property<string>("PlanName");
-
-                    b.Property<string>("SubscriptionID");
-
-                    b.HasKey("InvoiceID");
-
-                    b.ToTable("Invoices");
                 });
 
             modelBuilder.Entity("CallMeAPI.Models.SecurityLinkToken", b =>

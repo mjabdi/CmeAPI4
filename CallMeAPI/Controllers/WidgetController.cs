@@ -74,7 +74,6 @@ namespace CallMeAPI.Controllers
         {
             try
             {
-
                 AuthController.ValidateAndGetCurrentUserName(this.HttpContext.Request);
 
                 email = email.Replace("'", "");
@@ -88,7 +87,14 @@ namespace CallMeAPI.Controllers
                 List<WidgetDTO> widgetDTOList = new List<WidgetDTO>();
                 foreach (Widget widget in widgetList)
                 {
-                    widgetDTOList.Add(new WidgetDTO(widget));
+                    WidgetDTO wgtDTO = new WidgetDTO(widget);
+
+                    if (CallmeController.IsWidgetOutofSubscription(widget, context))
+                        wgtDTO.Status = "Out of Subscription";
+                    else if (await CallmeController.IsWidgetOutofCallAsync(widget, context))
+                        wgtDTO.Status = "Out of Call";
+                    
+                    widgetDTOList.Add(wgtDTO);
                 }
 
                 return widgetDTOList;
@@ -232,7 +238,17 @@ namespace CallMeAPI.Controllers
                 List<CallbackSchedule> callbackSchedules = await context.CallbackSchedules.Where(cs => cs.widgetID == Guid.Parse(id)).ToListAsync();
 
                 context.CallbackSchedules.RemoveRange(callbackSchedules);
-                context.Widgets.Remove(context.Widgets.Find(Guid.Parse(id)));
+                Widget widget = context.Widgets.Find(Guid.Parse(id));
+                context.Widgets.Remove(widget);
+
+                if (widget.CallsCountMonth > 0)
+                {
+                    Widget widget2 = context.Widgets.FirstOrDefault(wgt => wgt.subscriptionId == widget.subscriptionId && wgt.ID != widget.ID);
+                    if (widget2 != null)
+                    {
+                        widget2.CallsCountMonth += widget.CallsCountMonth;
+                    }
+                }
 
                 await context.SaveChangesAsync();
                 return Ok();

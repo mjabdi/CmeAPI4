@@ -102,6 +102,64 @@ namespace CallMeAPI.Controllers
         }
 
 
+        [HttpGet("customersactive")]
+        public IEnumerable<CustomerDTO> GetCustomersActive()
+        {
+            AuthController.ValidateAndGetCurrentUserName(this.HttpContext.Request);
+
+            try
+            {
+                List<User> users = contextUsers.Users.Where(u => u.IsActive == true && !string.IsNullOrEmpty(u.CustomerID)).OrderByDescending(u => u.CreationDateTime).ToList();
+                List<CustomerDTO> customers = new List<CustomerDTO>();
+                foreach (User user in users)
+                {
+                    CustomerDTO customer = new CustomerDTO();
+                    customer.name = user.Name;
+                    customer.email = user.UserID;
+                    customer.creationDateTime = user.CreationDateTime.ToShortDateString() + " [" + user.CreationDateTime.ToShortTimeString() + "]";
+                    if (user.LastLogon.HasValue)
+                        customer.lastLogin = user.LastLogon?.ToShortDateString() + " [" + user.LastLogon?.ToShortTimeString() + "]";
+                    customers.Add(customer);
+                }
+
+                return customers;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+
+        [HttpGet("customersdeactive")]
+        public IEnumerable<CustomerDTO> GetCustomersDeActive()
+        {
+            AuthController.ValidateAndGetCurrentUserName(this.HttpContext.Request);
+
+            try
+            {
+                List<User> users = contextUsers.Users.Where(u => u.IsActive == true && string.IsNullOrEmpty(u.CustomerID)).OrderByDescending(u => u.CreationDateTime).ToList();
+                List<CustomerDTO> customers = new List<CustomerDTO>();
+                foreach (User user in users)
+                {
+                    CustomerDTO customer = new CustomerDTO();
+                    customer.name = user.Name;
+                    customer.email = user.UserID;
+                    customer.creationDateTime = user.CreationDateTime.ToShortDateString() + " [" + user.CreationDateTime.ToShortTimeString() + "]";
+                    if (user.LastLogon.HasValue)
+                        customer.lastLogin = user.LastLogon?.ToShortDateString() + " [" + user.LastLogon?.ToShortTimeString() + "]";
+                    customers.Add(customer);
+                }
+
+                return customers;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+
 
 
         // POST: /api/auth/login

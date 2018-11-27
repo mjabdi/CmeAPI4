@@ -24,6 +24,18 @@ namespace CallMeAPI.Models
         }
 
 
+        public static int GetPlanMaxCalls(string planID)
+        {
+            if (planID == Plan_SoleTrader)
+                return 40;
+            else if (planID == Plan_SmallBusiness)
+                return 90;
+            else if (planID == Plan_LargeBusiness)
+                return 200;
+            else
+                return 0;
+        }
+
 
         [Key]
         public string ID { get; set; }

@@ -98,20 +98,10 @@ namespace CallMeAPI.Controllers
             }
         }
 
-        private void sendCallNotificationEmail(string notificationEmail, string name, string leadName, string leadEmail, string leadPhoneNumber, string v, string leadMessage)
-        {
-            throw new NotImplementedException();
-        }
-
-
-
-
-
-
 
         // POST: /api/callme/validate
         [HttpPost("validate")]
-        public string Validate([FromBody]TokenDTO token)
+        public async Task<string> ValidateAsync([FromBody]TokenDTO token)
         {
 
             if (token == null)
@@ -128,8 +118,45 @@ namespace CallMeAPI.Controllers
             if (string.IsNullOrWhiteSpace(wgt.AuthKey) || string.IsNullOrWhiteSpace(wgt.Extension))
                 return "NotActive";
 
+            if (String.IsNullOrEmpty(wgt.subscriptionId))
+                return "NoSubscription";
+            
+            if (await IsWidgetOutofCallAsync(wgt,context))
+                return "OutofCall";
+
+            if (IsWidgetOutofSubscription(wgt,context))
+                return "SubscriptionExpired";
+            
             return "OK";
         }
+
+
+        public static async Task<bool> IsWidgetOutofCallAsync(Widget wgt,MyDBContext context)
+        {
+            int calls = 0;
+
+            CallMeAPI.Models.Subscription subscription = context.Subscriptions.Find(wgt.subscriptionId);
+
+            int maxCalls = Subscription.GetPlanMaxCalls(subscription.PlanID);
+
+            List<Widget> widgets = await context.Widgets.Where(widget => widget.subscriptionId == wgt.subscriptionId).ToListAsync();
+
+            foreach(Widget widget in widgets)
+            {
+                calls += widget.CallsCountMonth;
+            }
+
+            return calls >= maxCalls;
+        }
+
+        public static bool IsWidgetOutofSubscription(Widget wgt,MyDBContext context)
+        {
+            CallMeAPI.Models.Subscription subscription = context.Subscriptions.Find(wgt.subscriptionId);
+
+            return (subscription.Status.ToLower() == "canceled");
+        } 
+
+
 
 
         //private string tryGetUKDateTime()
@@ -583,7 +610,7 @@ namespace CallMeAPI.Controllers
             return result;
         }
 
-            public async Task<string> Call(Guid widgetID, string phoneNumber,string apiKey,string extension, string customerName)//[FromBody]TestCall callInfo)
+        public async Task<string> Call(Guid widgetID, string phoneNumber, string apiKey, string extension, string customerName)//[FromBody]TestCall callInfo)
         {
             string requestStr = "";
             string responseStr = "";
@@ -626,12 +653,21 @@ namespace CallMeAPI.Controllers
                 {
                     stream.Write(data, 0, data.Length);
 
+                    Widget widget = context.Widgets.Find(widgetID);
+
+                    if (IsWidgetOutofSubscription(widget,context))
+                        throw new Exception("Subscription Expired!");
+
+                    if (await IsWidgetOutofCallAsync(widget,context))
+                        throw new Exception("Widget Out of Call!");
 
                     var response = await request.GetResponseAsync();
                     var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
 
-                    Widget widget = context.Widgets.Find(widgetID);
+                   
                     widget.CallsCount = widget.CallsCount + 1;
+                    widget.CallsCountMonth = widget.CallsCountMonth + 1;
+
                     context.SaveChanges();
 
                     responseStr = responseString;
@@ -644,7 +680,8 @@ namespace CallMeAPI.Controllers
                 responseStr = ex.Message;
                 throw ex;
             }
-            finally{
+            finally
+            {
                 CallLog log = new CallLog { Request = requestStr, Response = responseStr, ReqDateTime = now };
                 context.CallLogs.Add(log);
                 await context.SaveChangesAsync();

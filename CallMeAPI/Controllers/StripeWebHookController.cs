@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CallMeAPI.Models;
 using Microsoft.AspNet.WebHooks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Stripe;
@@ -27,11 +28,11 @@ namespace CallMeAPI.Controllers
         }
 
         [HttpGet("test")]
-        public void Test()
+        public async Task TestAsync()
         {
             try
             {
-                long testID = 88;
+                long testID = 448;
                 string testEvent = context.StripeEventLogs.Find(testID).Event;
 
                 var obj = JObject.Parse(testEvent);
@@ -78,6 +79,48 @@ namespace CallMeAPI.Controllers
                     DateTime created = DateTimeOffset.FromUnixTimeSeconds((long)obj.SelectToken("data.object.created")).DateTime;
                     string email = (string)obj.SelectToken("data.object.email");
                 }
+                else if (type == "invoice.payment_succeeded")
+                {
+                    string invoiceID = (string)obj.SelectToken("data.object.id");
+                    decimal amount_paid = ((decimal)obj.SelectToken("data.object.amount_paid")) / 100;
+                    string customer = (string)obj.SelectToken("data.object.customer");
+                    DateTime finalized_at = DateTimeOffset.FromUnixTimeSeconds((long)obj.SelectToken("data.object.finalized_at")).DateTime;
+                    string invoice_pdf = (string)obj.SelectToken("data.object.invoice_pdf");
+                    string description = (string)obj.SelectToken("data.object.lines.data[0].description");
+                    DateTime period_start = DateTimeOffset.FromUnixTimeSeconds((long)obj.SelectToken("data.object.lines.data[0].period.start")).DateTime;
+                    DateTime period_end = DateTimeOffset.FromUnixTimeSeconds((long)obj.SelectToken("data.object.lines.data[0].period.end")).DateTime;
+                    string plan_nickname = (string)obj.SelectToken("data.object.lines.data[0].plan.nickname");
+                    string subscriptionID = (string)obj.SelectToken("data.object.lines.data[0].subscription");
+
+                    if (amount_paid > 0)
+                    {
+                        Models.Invoice invoice = new Models.Invoice();
+                        invoice.InvoiceID = invoiceID;
+                        invoice.AmountPaid = amount_paid;
+                        invoice.CustomerID = customer;
+                        invoice.InvoiceDateTime = finalized_at;
+                        invoice.InvoicePdf = invoice_pdf;
+                        invoice.Description = description;
+                        invoice.PlanName = plan_nickname;
+                        invoice.SubscriptionID = subscriptionID;
+
+                        context.Invoices.Add(invoice);
+
+                        var subscription = context.Subscriptions.Find(subscriptionID);
+                        subscription.CurrentPeriodEnd = period_end;
+                        subscription.CurrentPeriodStart = period_start;
+
+                        List<Widget> widgets = await context.Widgets.Where(widget => widget.subscriptionId == subscriptionID).ToListAsync();
+
+                        foreach (Widget widget in widgets)
+                        {
+                            widget.CallsCountMonth = 0;
+                        }
+
+                        await context.SaveChangesAsync();
+                    }
+                }
+
 
                 Console.WriteLine(obj.ToString());
             }
@@ -89,7 +132,7 @@ namespace CallMeAPI.Controllers
 
 
         [HttpPost]
-        public void Index()
+        public async Task IndexAsync()
         {
             try
             {
@@ -101,9 +144,7 @@ namespace CallMeAPI.Controllers
                 log.Event = json.ToString();
                 log.EventDateTime = DateTime.Now;
                 context.StripeEventLogs.Add(log);
-                context.SaveChanges();
-
-
+                await context.SaveChangesAsync();
 
                 var obj = JObject.Parse(json);
 
@@ -142,7 +183,7 @@ namespace CallMeAPI.Controllers
                     newSubscription.TrialingUntil = trial_end;
 
                     context.Subscriptions.Add(newSubscription);
-                    context.SaveChanges();
+                    await context.SaveChangesAsync();
                 }
                 else if (type == "customer.subscription.updated")
                 {
@@ -177,7 +218,7 @@ namespace CallMeAPI.Controllers
                     subscription.CancelAtPeriodEnd = cancel_at_period_end;
                     subscription.TrialingUntil = trial_end;
 
-                    context.SaveChanges();
+                    await context.SaveChangesAsync();
                 }
                 else if (type == "customer.subscription.deleted")
                 {
@@ -205,12 +246,61 @@ namespace CallMeAPI.Controllers
                     subscription.CurrentPeriodEnd = current_period_end;
                     subscription.CurrentPeriodStart = current_period_start;
                     subscription.CancelAtPeriodEnd = cancel_at_period_end;
-                    context.SaveChanges();
+                    await context.SaveChangesAsync();
+                }                
+                else if (type == "invoice.payment_succeeded")
+                {
+                    string invoiceID = (string)obj.SelectToken("data.object.id");
+                    decimal amount_paid = ((decimal)obj.SelectToken("data.object.amount_paid")) / 100;
+                    string customer = (string)obj.SelectToken("data.object.customer");
+                    DateTime finalized_at = DateTimeOffset.FromUnixTimeSeconds((long)obj.SelectToken("data.object.finalized_at")).DateTime;
+                    string invoice_pdf = (string)obj.SelectToken("data.object.invoice_pdf");
+                    string description = (string)obj.SelectToken("data.object.lines.data[0].description");
+                    DateTime period_start = DateTimeOffset.FromUnixTimeSeconds((long)obj.SelectToken("data.object.lines.data[0].period.start")).DateTime;
+                    DateTime period_end = DateTimeOffset.FromUnixTimeSeconds((long)obj.SelectToken("data.object.lines.data[0].period.end")).DateTime;
+                    string plan_nickname = (string)obj.SelectToken("data.object.lines.data[0].plan.nickname");
+                    string subscriptionID = (string)obj.SelectToken("data.object.lines.data[0].subscription");
+
+                    if (amount_paid > 0)
+                    {
+                        Models.Invoice invoice = new Models.Invoice();
+                        invoice.InvoiceID = invoiceID;
+                        invoice.AmountPaid = amount_paid;
+                        invoice.CustomerID = customer;
+                        invoice.InvoiceDateTime = finalized_at;
+                        invoice.InvoicePdf = invoice_pdf;
+                        invoice.Description = description;
+                        invoice.PlanName = plan_nickname;
+                        invoice.SubscriptionID = subscriptionID;
+
+                        context.Invoices.Add(invoice);
+
+                        var subscription = context.Subscriptions.Find(subscriptionID);
+                        if (subscription != null)
+                        {
+                            subscription.CurrentPeriodEnd = period_end;
+                            subscription.CurrentPeriodStart = period_start;
+                        }
+
+                        List<Widget> widgets = await context.Widgets.Where(widget => widget.subscriptionId == subscriptionID).ToListAsync();
+
+                        foreach (Widget widget in widgets)
+                        {
+                            widget.CallsCountMonth = 0;
+                        }
+
+                        await context.SaveChangesAsync();
+                    }
                 }
             }
-            catch(Exception)
+            catch(Exception ex)
             {
-                
+                AppException exception = new AppException();
+                exception.ErrorDateTime = DateTime.Now;
+                exception.Message = ex.Message;
+                exception.FullString = ex.ToString();
+                context.AppExceptions.Add(exception);
+                await context.SaveChangesAsync();
             }
         }
     }

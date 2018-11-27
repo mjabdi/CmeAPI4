@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CallMeAPI.Models;
+using CallMeAPI.Controllers;
 
 namespace CallMeAPI.DTO
 {
@@ -23,6 +24,7 @@ namespace CallMeAPI.DTO
             ColorText = widget.ColorText;
             IsAnimated = widget.IsAnimated;
             CallsCount = widget.CallsCount;
+            CallsCountMonth = widget.CallsCountMonth;
             DomainUrl = widget.DomainURL;
             AuthKey = widget.AuthKey;
             Extension = widget.Extension;
@@ -63,6 +65,8 @@ namespace CallMeAPI.DTO
         public bool IsAnimated { get; set; }
 
         public int CallsCount { get; set; }
+
+        public int CallsCountMonth { get; set; }
 
         public string DomainUrl { get; set; }
 
