@@ -423,7 +423,7 @@ namespace CallMeAPI.Controllers
             customDate.date = date.ToString("MMM") + " " + date.Day;
             customDate.fulldate = date.ToString("MMMM") + " " + date.Day + ", " + date.Year;
             customDate.today = (date.Date == now.Date) ? "<div class='today'>-today-</div>" : "";
-            customDate.todaym = (date.Date == now.Date) ? "<strong style='color:gray' class='today-mobile'>&nbsp;&nbsp;-today-</strong>" : "";
+            customDate.todaym = (date.Date == now.Date) ? "<strong style='color:gray' class='today-mobilewg'>&nbsp;&nbsp;-today-</strong>" : "";
             customDate.day = date.ToString("ddd");
             customDate.fullday = date.DayOfWeek.ToString();
 

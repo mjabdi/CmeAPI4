@@ -136,9 +136,7 @@ namespace CallMeAPI.Controllers
         {
             try
             {
-
                 var json = new StreamReader(HttpContext.Request.Body).ReadToEnd();
-
 
                 StripeEventLog log = new StripeEventLog();
                 log.Event = json.ToString();
@@ -150,6 +148,9 @@ namespace CallMeAPI.Controllers
 
                 string type = (string)obj.SelectToken("type");
                 bool livemode = (bool)obj.SelectToken("livemode");
+
+                if (livemode != Program.StripeLiveMode)
+                    return;
 
                 if (type == "customer.subscription.created")
                 {

@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using CallMeAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,32 +18,77 @@ namespace CallMeAPI.Controllers
     public class GradwellController : Controller
     {
 
+        private MyDBContext context;
 
-
-        [HttpGet("getreport/{vcp}/{date}")]
-        public string getReport(string vcp,string date)
+        public GradwellController(MyDBContext _context)
         {
-            try
-            {
-                CookieContainer cookiesContainer = new CookieContainer();
-
-                var request = (HttpWebRequest)WebRequest.Create("https://voip.gradwell.com/login/calls_out/unbilled." + date + ".csv?version=2");
-                cookiesContainer = new CookieContainer();
-                var mycookie = new Cookie("vcp", vcp, "/", ".gradwell.com");
-                cookiesContainer.Add(mycookie);
-                request.CookieContainer = cookiesContainer;
-
-                request.Method = "GET";
-
-                var response = (HttpWebResponse)request.GetResponse();
-                var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                return responseString;
-            }
-            catch (Exception ex)
-            {
-                return "Not Found";
-            }
+            context = _context;
         }
+
+        [HttpPost("uploadreport")]
+        public async Task<int> UploadReport([FromBody]object[][] data)
+        {
+
+            AuthController.ValidateAndGetCurrentUserName(this.HttpContext.Request);
+
+            int newRecords = 0;
+
+            for (int i = 1; i < data.Length; i++)
+            {
+                CallReport callReport = new CallReport();
+
+                callReport.CallType = data[i][0].ToString();
+                callReport.Time = DateTime.Parse(data[i][1].ToString());
+                callReport.Extension = data[i][2].ToString();
+                callReport.Source = data[i][3].ToString();
+                callReport.Destination = data[i][4].ToString();
+                callReport.Duration = data[i][5].ToString();
+                callReport.Seconds = int.Parse(data[i][6].ToString());
+                callReport.Cost = decimal.Parse(data[i][7].ToString());
+
+                var tmpCall = await context.CallReports.FirstOrDefaultAsync(call => call.Time == callReport.Time && call.Extension == callReport.Extension);
+
+                if (tmpCall == null)
+                {
+                    context.CallReports.Add(callReport);
+                    await context.SaveChangesAsync();
+                    newRecords++;
+                }
+            }
+
+            return newRecords;
+        }
+
+
+
+
+
+
+
+        //[HttpGet("getreport/{vcp}/{date}")]
+        //public string getReport(string vcp,string date)
+        //{
+        //    try
+        //    {
+        //        CookieContainer cookiesContainer = new CookieContainer();
+
+        //        var request = (HttpWebRequest)WebRequest.Create("https://voip.gradwell.com/login/calls_out/unbilled." + date + ".csv?version=2");
+        //        cookiesContainer = new CookieContainer();
+        //        var mycookie = new Cookie("vcp", vcp, "/", ".gradwell.com");
+        //        cookiesContainer.Add(mycookie);
+        //        request.CookieContainer = cookiesContainer;
+
+        //        request.Method = "GET";
+
+        //        var response = (HttpWebResponse)request.GetResponse();
+        //        var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+        //        return responseString;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return "Not Found";
+        //    }
+        //}
 
 
            

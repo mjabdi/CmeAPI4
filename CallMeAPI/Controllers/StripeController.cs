@@ -107,6 +107,7 @@ namespace CallMeAPI.Controllers
                 mysub.CustomerId = customerID;
                 mysub.Items = new List<SubscriptionItemOption>();
                 mysub.TrialFromPlan = newCustomer;
+                mysub.TaxPercent = 20m;
 
                 mysub.Items.Add(new SubscriptionItemOption { PlanId = req.planId, Quantity = 1 });
                 var subscription = await subscriptions.CreateAsync(mysub);

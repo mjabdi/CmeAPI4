@@ -27,6 +27,7 @@ namespace CallMeAPI.Models
         public virtual DbSet<CallMeAPI.Models.Subscription> Subscriptions { get; set; }
         public virtual DbSet<CallMeAPI.Models.Invoice> Invoices { get; set; }
         public virtual DbSet<CallMeAPI.Models.AppException> AppExceptions { get; set; }
+        public virtual DbSet<CallMeAPI.Models.CallReport> CallReports { get; set; }
 
     }
 }

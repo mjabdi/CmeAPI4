@@ -87,9 +87,8 @@ namespace CallMeAPI.Controllers
                     CustomerDTO customer = new CustomerDTO();
                     customer.name = user.Name;
                     customer.email = user.UserID;
-                    customer.creationDateTime = user.CreationDateTime.ToShortDateString() + " [" +  user.CreationDateTime.ToShortTimeString() + "]";
-                    if (user.LastLogon.HasValue)
-                        customer.lastLogin = user.LastLogon?.ToShortDateString() + " [" + user.LastLogon?.ToShortTimeString() + "]";
+                    customer.creationDateTime = user.CreationDateTime;
+                    customer.lastLogin = user.LastLogon;
                     customers.Add(customer);
                 }
 
@@ -116,9 +115,8 @@ namespace CallMeAPI.Controllers
                     CustomerDTO customer = new CustomerDTO();
                     customer.name = user.Name;
                     customer.email = user.UserID;
-                    customer.creationDateTime = user.CreationDateTime.ToShortDateString() + " [" + user.CreationDateTime.ToShortTimeString() + "]";
-                    if (user.LastLogon.HasValue)
-                        customer.lastLogin = user.LastLogon?.ToShortDateString() + " [" + user.LastLogon?.ToShortTimeString() + "]";
+                    customer.creationDateTime = user.CreationDateTime;
+                    customer.lastLogin = user.LastLogon;
                     customers.Add(customer);
                 }
 
@@ -145,9 +143,8 @@ namespace CallMeAPI.Controllers
                     CustomerDTO customer = new CustomerDTO();
                     customer.name = user.Name;
                     customer.email = user.UserID;
-                    customer.creationDateTime = user.CreationDateTime.ToShortDateString() + " [" + user.CreationDateTime.ToShortTimeString() + "]";
-                    if (user.LastLogon.HasValue)
-                        customer.lastLogin = user.LastLogon?.ToShortDateString() + " [" + user.LastLogon?.ToShortTimeString() + "]";
+                    customer.creationDateTime = user.CreationDateTime;
+                    customer.lastLogin = user.LastLogon;
                     customers.Add(customer);
                 }
 
@@ -457,8 +454,8 @@ namespace CallMeAPI.Controllers
     {
         public string name { get; set; }
         public string email { get; set; }
-        public string creationDateTime { get; set; }
-        public string lastLogin { get; set; }
+        public DateTime creationDateTime { get; set; }
+        public DateTime? lastLogin { get; set; }
         public int widgetsCount { get; set; }
         public string subscription { get; set; }
 

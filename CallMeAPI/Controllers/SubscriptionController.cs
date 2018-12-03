@@ -42,5 +42,40 @@ namespace CallMeAPI.Controllers
             return subscriptionsDTO;
         }
 
+        [HttpGet("user/{email}")]
+        public async Task<IEnumerable<SubscriptionDTO>> GetUserSubscriptions(string email)
+        {
+            AuthController.ValidateAndGetCurrentUserName(this.HttpContext.Request);
+
+            List<CallMeAPI.Models.Subscription> subscriptions = await context.Subscriptions
+                .Where(sub => sub.CustomerEmail == email)
+                .OrderByDescending(sub => sub.Created)
+                .ToListAsync();
+
+            List<SubscriptionDTO> subscriptionsDTO = new List<SubscriptionDTO>();
+            foreach (CallMeAPI.Models.Subscription sub in subscriptions)
+            {
+                subscriptionsDTO.Add(new SubscriptionDTO(sub));
+            }
+
+            return subscriptionsDTO;
+        }
+
+
+
+
+        [HttpGet("invoice/{subscriptionid}")]
+        public async Task<IEnumerable<Invoice>> GetInvoices(string subscriptionid)
+        {
+            AuthController.ValidateAndGetCurrentUserName(this.HttpContext.Request);
+
+            List<Invoice> invoices = await context.Invoices
+                 .Where(inv => inv.SubscriptionID == subscriptionid)
+                 .OrderByDescending(inv => inv.InvoiceDateTime)
+                 .ToListAsync();
+
+            return invoices;
+        }
+
     }
 }

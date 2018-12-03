@@ -5,10 +5,13 @@ namespace CallMeAPI.Models
 {
     public class Subscription
     {
-        public static readonly string Plan_SoleTrader = "plan_DyKREpq8pGQqPo";
-        public static readonly string Plan_SmallBusiness = "plan_DyKSvf9djCEUs6";
-        public static  readonly string Plan_LargeBusiness = "plan_DyKTNXWj9EzUz6";
-        public static readonly string Product_CallbackWidget = "prod_DyKPxXIDTQqPXW";
+        public static readonly string Plan_SoleTrader = "plan_E4lrKKOvSs1y6E";
+        public static readonly string Plan_SmallBusiness = "plan_E4lsp3bZc4K4w5";
+        public static  readonly string Plan_LargeBusiness = "plan_E4lsEL6EYsjTl4";
+
+
+        public static readonly string Plan_VIP = "VIP_plan_RT4Y5JKR45";
+
 
 
         public static string GetPlanName(string planID)
@@ -19,6 +22,8 @@ namespace CallMeAPI.Models
                 return "Small Business";
             else if (planID == Plan_LargeBusiness)
                 return "Large Business";
+            else if (planID == Plan_VIP)
+                return "VIP Unlimited";
             else
                 return "Unknown";
         }
@@ -32,6 +37,8 @@ namespace CallMeAPI.Models
                 return 90;
             else if (planID == Plan_LargeBusiness)
                 return 200;
+            else if (planID == Plan_VIP)
+                return int.MaxValue;
             else
                 return 0;
         }
