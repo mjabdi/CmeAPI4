@@ -67,6 +67,22 @@ namespace CallMeAPI.Controllers
         }
 
 
+        // POST: api/widget/emailsnippetcode
+        [HttpPost("emailsnippetcode/{id}")]
+        public async Task SendSnippetCodeEmail(string id)
+        {
+            AuthController.ValidateAndGetCurrentUserName(this.HttpContext.Request);
+            var email = this.HttpContext.Request.Headers["From"];
+
+            Widget widget = await context.Widgets
+                             .Include(e => e.User)
+                             .FirstOrDefaultAsync(e => e.ID.ToString() == id);
+
+
+            EmailManager.SendWidgetSnippetCode(widget);
+        }
+
+
 
         // GET: api/widget/{email}
         [HttpGet("user/{email}")]
@@ -142,6 +158,8 @@ namespace CallMeAPI.Controllers
                 Widget wgt = new Widget(widget, context);
                 context.Widgets.Add(wgt);
                 await context.SaveChangesAsync();
+
+                EmailManager.SendCreationWidgetNotification(wgt);
 
                 return Ok(new { Token = wgt.ID });
             }catch (Exception ex)

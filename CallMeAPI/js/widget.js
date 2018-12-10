@@ -11,6 +11,10 @@ function callMeNow891(){
 	
 ReqUrl = "'" +  window.location + "'";
 
+$('#btn_ttln_callback').attr('disabled','disabled');
+$('#btn_ttln_callback').attr('type','button');
+$('#btn_ttln_callback').attr('value','Please wait a moment...');
+
 
     var url = "$server$/api/callme"; // the script where you handle the form input.
     $.ajax({

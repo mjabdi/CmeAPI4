@@ -25,11 +25,17 @@ namespace CallMeAPI.Controllers
             context = _context;
         }
 
-        [HttpPost("uploadreport")]
-        public async Task<int> UploadReport([FromBody]object[][] data)
-        {
+        [HttpPost("uploadreport/{datestr}")]
+        public async Task<int> UploadReport(string datestr, [FromBody]object[][] data)
+            {
 
             AuthController.ValidateAndGetCurrentUserName(this.HttpContext.Request);
+
+            DateTime date = DateTime.ParseExact(datestr,"yyyy-MM-dd",null);
+
+             var calllogs = await context.CallLogs
+            .Where(log => log.ReqDateTime.Year == date.Year && log.ReqDateTime.Month == date.Month && log.ReqDateTime.Day == date.Day)
+                .ToListAsync();
 
             int newRecords = 0;
 
@@ -38,7 +44,8 @@ namespace CallMeAPI.Controllers
                 CallReport callReport = new CallReport();
 
                 callReport.CallType = data[i][0].ToString();
-                callReport.Time = DateTime.Parse(data[i][1].ToString());
+                DateTime time_part = DateTime.Parse(data[i][1].ToString());
+                callReport.Time = new DateTime(date.Year,date.Month,date.Day,time_part.Hour,time_part.Minute,time_part.Second);
                 callReport.Extension = data[i][2].ToString();
                 callReport.Source = data[i][3].ToString();
                 callReport.Destination = data[i][4].ToString();
@@ -46,13 +53,31 @@ namespace CallMeAPI.Controllers
                 callReport.Seconds = int.Parse(data[i][6].ToString());
                 callReport.Cost = decimal.Parse(data[i][7].ToString());
 
-                var tmpCall = await context.CallReports.FirstOrDefaultAsync(call => call.Time == callReport.Time && call.Extension == callReport.Extension);
+                var tmpCall = await context.CallReports.FirstOrDefaultAsync(call => call.Time == callReport.Time && call.Extension == callReport.Extension && call.Destination == callReport.Destination && call.Source == callReport.Source && call.Duration == callReport.Duration);
 
                 if (tmpCall == null)
                 {
-                    context.CallReports.Add(callReport);
-                    await context.SaveChangesAsync();
-                    newRecords++;
+                    var related = false;
+                    foreach(CallLog log in calllogs)
+                    {
+                        if (log.Request.Contains(callReport.Extension) 
+                        && log.Request.Contains(callReport.Destination)
+                        && log.ReqDateTime.Day == callReport.Time.Day
+                        && log.ReqDateTime.Hour == callReport.Time.Hour
+                        && Math.Abs(log.ReqDateTime.Minute - callReport.Time.Minute) < 2
+                            )
+                        {
+                            related = true;
+                            break;
+                        }
+                    }
+
+                    if (related)
+                    {
+                        context.CallReports.Add(callReport);
+                        await context.SaveChangesAsync();
+                        newRecords++;
+                    }
                 }
             }
 

@@ -260,6 +260,7 @@ namespace CallMeAPI.Controllers
             try
             {
                 EmailManager.SendActivationlinkEmail(registerInfo.Email,user.Name, token.ToString());
+                EmailManager.SendSignUpNotificationEmail(EmailManager.AdminEmail, user.Name, user.UserID);
             }
             catch (Exception ex)
             {

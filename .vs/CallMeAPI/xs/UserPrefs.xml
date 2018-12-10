@@ -1,13 +1,13 @@
 ﻿<Properties StartupConfiguration="{C87F8D7C-0F79-485D-85A5-9F762BB1B8AE}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="CallMeAPI/Controllers/SubscriptionController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="CallMeAPI/Controllers/EmailManager.cs">
     <Files>
-      <File FileName="CallMeAPI/Program.cs" Line="14" Column="25" />
-      <File FileName="CallMeAPI/Controllers/CallmeController.cs" Line="613" Column="9" />
-      <File FileName="CallMeAPI/Controllers/AuthController.cs" Line="147" Column="21" />
+      <File FileName="CallMeAPI/Program.cs" Line="15" Column="6" />
+      <File FileName="CallMeAPI/Controllers/CallmeController.cs" Line="628" Column="21" />
+      <File FileName="CallMeAPI/Controllers/AuthController.cs" Line="263" Column="17" />
       <File FileName="CallMeAPI/appsettings.json" Line="19" Column="56" />
       <File FileName="CallMeAPI/DTO/LoginDTO.cs" Line="5" Column="18" />
       <File FileName="CallMeAPI/Controllers/StyleController.cs" Line="64" Column="70" />
-      <File FileName="CallMeAPI/Controllers/WidgetController.cs" Line="37" Column="1" />
+      <File FileName="CallMeAPI/Controllers/WidgetController.cs" Line="74" Column="1" />
       <File FileName="CallMeAPI/appsettings.Development.json" Line="19" Column="1" />
       <File FileName="CallMeAPI/Models/Widget.cs" Line="68" Column="33" />
       <File FileName="CallMeAPI/Models/WeekDay.cs" Line="44" Column="27" />
@@ -20,27 +20,27 @@
       <File FileName="CallMeAPI/Models/MyDBContext.cs" Line="30" Column="70" />
       <File FileName="CallMeAPI/Models/EventLog.cs" Line="1" Column="1" />
       <File FileName="CallMeAPI/ServiceExtension.cs" Line="13" Column="28" />
-      <File FileName="CallMeAPI/Controllers/EmailManager.cs" Line="126" Column="73" />
+      <File FileName="CallMeAPI/Controllers/EmailManager.cs" Line="253" Column="1" />
       <File FileName="CallMeAPI/Models/Subscription.cs" Line="19" Column="1" />
       <File FileName="CallMeAPI/Models/User.cs" Line="25" Column="47" />
       <File FileName="CallMeAPI/Models/CallLog.cs" Line="12" Column="1" />
-      <File FileName="CallMeAPI/Controllers/StripeWebHookController.cs" Line="148" Column="1" />
+      <File FileName="CallMeAPI/Controllers/StripeWebHookController.cs" Line="299" Column="1" />
       <File FileName="CallMeAPI/Models/StripeEventLog.cs" Line="13" Column="1" />
-      <File FileName="CallMeAPI/Controllers/StripeController.cs" Line="110" Column="40" />
+      <File FileName="CallMeAPI/Controllers/StripeController.cs" Line="111" Column="1" />
       <File FileName="CallMeAPI/Models/SecurityLinkToken.cs" Line="1" Column="1" />
       <File FileName="CallMeAPI/DTO/SubscriptionDTO.cs" Line="23" Column="1" />
-      <File FileName="CallMeAPI/Controllers/SubscriptionController.cs" Line="49" Column="1" />
+      <File FileName="CallMeAPI/Controllers/SubscriptionController.cs" Line="30" Column="1" />
       <File FileName="CallMeAPI/Models/Invoice.cs" Line="8" Column="14" />
       <File FileName="CallMeAPI/Models/AppException.cs" Line="12" Column="1" />
       <File FileName="CallMeAPI/Models/CallReport.cs" Line="22" Column="42" />
-      <File FileName="CallMeAPI/Controllers/CallReportsController.cs" Line="56" Column="30" />
+      <File FileName="CallMeAPI/Controllers/CallReportsController.cs" Line="30" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.CallMeAPI PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MultiItemStartupConfigurations />
-  <MonoDevelop.Ide.ItemProperties.CallMeAPI PreferredExecutionTarget="MonoDevelop.Default" />
 </Properties>

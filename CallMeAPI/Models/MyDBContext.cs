@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Expressions;
 
 namespace CallMeAPI.Models
 {
@@ -14,6 +17,18 @@ namespace CallMeAPI.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.HasDbFunction(typeof(DbUtility)
+                .GetMethod(nameof(DbUtility.DateDiff)))
+                .HasTranslation(args =>
+                {
+                    var newArgs = args.ToArray();
+                    newArgs[0] = new SqlFragmentExpression((string)((ConstantExpression)newArgs[0]).Value);
+                    return new SqlFunctionExpression(
+                        "DATEDIFF",
+                        typeof(int),
+                        newArgs);
+                });
         }
 
         public virtual DbSet<User> Users { get; set; }
@@ -29,5 +44,14 @@ namespace CallMeAPI.Models
         public virtual DbSet<CallMeAPI.Models.AppException> AppExceptions { get; set; }
         public virtual DbSet<CallMeAPI.Models.CallReport> CallReports { get; set; }
 
+    }
+
+
+    public static class DbUtility
+    {
+        public static int DateDiff(string diffType, DateTime startDate, DateTime endDate)
+        {
+            throw new InvalidOperationException($"{nameof(DateDiff)} should be performed on database");
+        }
     }
 }

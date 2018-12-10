@@ -19,6 +19,11 @@ function callMeNowSchedule(){
 	
     ReqUrl = "'" +  window.location + "'";
 
+    $('#btn_ttln_callbackschedule').attr('disabled','disabled');
+    $('#btn_ttln_callbackschedule').attr('type','button');
+    $('#btn_ttln_callbackschedule').attr('value','Please wait a moment...');
+
+
     var url = "$server$/api/callme/schedulecall"; // the script where you handle the form input.
     $.ajax({
         url: url,
@@ -110,9 +115,7 @@ function validateCallMeForm(){
             return false;
 
         if(/^(07\d{8,12}|01\d{8,12}|02\d{8,12}|03\d{8,12})$/.test( value ))
-
-        if(/^(07\d{8,12}|447\d{7,11})$/.test( value ))
-        { return true;} else{ return false;}
+         { return true;} else{ return false;}
     },"This Phone no is for the UK customers only.");
 
     $.validator.addMethod("nameRegex", function (value, element) {

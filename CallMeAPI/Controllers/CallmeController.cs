@@ -55,7 +55,7 @@ namespace CallMeAPI.Controllers
                         {
                             //send email notification
 
-                            EmailManager.SendCallNotificationEmail(cs.widget.NotificationEmail, cs.widget.User.Name, cs.LeadName, cs.LeadEmail, cs.LeadPhoneNumber, cs.ScheduledDateTime.ToString(), cs.LeadMessage);
+                            EmailManager.SendCallNotificationEmail(cs.widget.DomainURL , cs.widget.NotificationEmail, cs.widget.User.Name, cs.LeadName, cs.LeadEmail, cs.LeadPhoneNumber, cs.ScheduledDateTime.ToString(), cs.LeadMessage);
 
                             cs.EmailNotificationDone = true;
                             await context.SaveChangesAsync();
@@ -70,16 +70,15 @@ namespace CallMeAPI.Controllers
                 List<CallbackSchedule> call_schedules = await context.CallbackSchedules.Include(c => c.widget)
                                                                      .Where(c => c.CallDone == false).ToListAsync();
 
-                foreach (CallbackSchedule cs in email_schedules)
+                foreach (CallbackSchedule cs in call_schedules)
                 {
-                    if (now.AddMinutes(15) >= cs.ScheduledDateTime)
+                    if (now >= cs.ScheduledDateTime)
                     {
-
                         try
                         {
                             //do callback 
 
-                             await Call(cs.widget.ID, cs.LeadPhoneNumber, cs.widget.AuthKey, cs.widget.Extension, cs.LeadName);
+                            string response = await Call(cs.widget.ID, cs.LeadPhoneNumber, cs.widget.AuthKey, cs.widget.Extension, cs.LeadName , 1);
 
                             cs.CallDone = true;
                             await context.SaveChangesAsync();
@@ -252,7 +251,7 @@ namespace CallMeAPI.Controllers
 
         // POST: /api/callme/getschedule
         [HttpPost("getschedule")]
-        public ValidateResponse GetSchedule([FromBody]TokenDTO token)
+        public async Task<ValidateResponse> GetScheduleAsync([FromBody]TokenDTO token)
         {
             try
             {
@@ -297,13 +296,13 @@ namespace CallMeAPI.Controllers
                     return response;
                 }
 
-                string[] startTimeSplit = startTime.Split(":".ToCharArray());
-                int startTimeHour = int.Parse(startTimeSplit[0]);
-                int startTimeMin = int.Parse(startTimeSplit[1]);
+                string[] startTimeSplit = startTime.Split(":. ".ToCharArray());
+                int startTimeHour = int.Parse(startTimeSplit[0],System.Globalization.NumberStyles.Any);
+                int startTimeMin = int.Parse(startTimeSplit[1],System.Globalization.NumberStyles.Any);
 
-                string[] endTimeSplit = endTime.Split(":".ToCharArray());
-                int endTimeHour = int.Parse(endTimeSplit[0]);
-                int endTimeMin = int.Parse(endTimeSplit[1]);
+                string[] endTimeSplit = endTime.Split(":.".ToCharArray());
+                int endTimeHour = int.Parse(endTimeSplit[0],System.Globalization.NumberStyles.Any);
+                int endTimeMin = int.Parse(endTimeSplit[1],System.Globalization.NumberStyles.Any);
 
                 int nowHour = now.TimeOfDay.Hours;
                 int nowMin = now.TimeOfDay.Minutes;
@@ -343,6 +342,13 @@ namespace CallMeAPI.Controllers
             }
             catch(Exception ex)
             {
+                AppException exception = new AppException();
+                exception.ErrorDateTime = DateTime.Now;
+                exception.Message = ex.Message;
+                exception.FullString = ex.ToString();
+                context.AppExceptions.Add(exception);
+                await context.SaveChangesAsync();
+               
                 throw ex;
             }
 
@@ -438,13 +444,13 @@ namespace CallMeAPI.Controllers
 
             var times = new List<string>();
 
-            string[] startTimeSplit = day.startTime.Split(":".ToCharArray());
-            int startTimeHour = int.Parse(startTimeSplit[0]);
-            int startTimeMin = int.Parse(startTimeSplit[1]);
+            string[] startTimeSplit = day.startTime.Split(":.".ToCharArray());
+            int startTimeHour = int.Parse(startTimeSplit[0],System.Globalization.NumberStyles.Any);
+            int startTimeMin = int.Parse(startTimeSplit[1],System.Globalization.NumberStyles.Any);
 
-            string[] endTimeSplit = day.endTime.Split(":".ToCharArray());
-            int endTimeHour = int.Parse(endTimeSplit[0]);
-            int endTimeMin = int.Parse(endTimeSplit[1]);
+            string[] endTimeSplit = day.endTime.Split(":.".ToCharArray());
+            int endTimeHour = int.Parse(endTimeSplit[0],System.Globalization.NumberStyles.Any);
+            int endTimeMin = int.Parse(endTimeSplit[1],System.Globalization.NumberStyles.Any);
 
             for (int hour = startTimeHour; hour <= endTimeHour; hour++)
             {
@@ -525,12 +531,20 @@ namespace CallMeAPI.Controllers
                 if (callInfo == null)
                     return "NotFound";
 
-                Widget wgt = context.Widgets.Find(Guid.Parse(callInfo.token));
+                Widget wgt = await context.Widgets.Include(widget => widget.User)
+                    .Where(widget => widget.ID == Guid.Parse(callInfo.token))
+                    .FirstOrDefaultAsync();
 
                 if (wgt == null)
                     return "NotFound";
 
-                await Call(wgt.ID, callInfo.phone, wgt.AuthKey, wgt.Extension, callInfo.name);
+                await Call(wgt.ID, callInfo.phone, wgt.AuthKey, wgt.Extension, callInfo.name,0);
+
+                try
+                {
+                    EmailManager.SendOnlineCallNotificationEmail(wgt.DomainURL, wgt.NotificationEmail, wgt.User.Name, callInfo.name, callInfo.email, callInfo.phone, GetUKDateTime());
+                }
+                catch (Exception) { }
 
                 return "OK: Call request sent";
             }
@@ -543,14 +557,19 @@ namespace CallMeAPI.Controllers
 
         // POST: /api/schedulecall
         [HttpPost("schedulecall")]
-        public string ScheduleCall([FromBody]ScheduleCallDTO callInfo)
+        public async Task<string> ScheduleCallAsync([FromBody]ScheduleCallDTO callInfo)
         {
             try
             {
                 if (callInfo == null)
                     return "NotFound";
 
-                Widget wgt = context.Widgets.Find(Guid.Parse(callInfo.token));
+                //Widget wgt = context.Widgets.Find(Guid.Parse(callInfo.token));
+                //wgt.User = context.Users.Find(wgt.UserID);
+
+                Widget wgt = await context.Widgets.Include(widget => widget.User)
+                    .Where(widget => widget.ID == Guid.Parse(callInfo.token))
+                    .FirstOrDefaultAsync();
 
                 if (wgt == null)
                     return "NotFound";
@@ -567,11 +586,22 @@ namespace CallMeAPI.Controllers
 
                 schedule.ScheduledDateTime = ParseDateTime(callInfo.date, callInfo.time);
                 context.CallbackSchedules.Add(schedule);
-                context.SaveChanges();
+                await context.SaveChangesAsync();
+
+                try
+                {
+                    EmailManager.SendCallNotificationEmail(wgt.DomainURL, wgt.NotificationEmail, wgt.User.Name, schedule.LeadName, schedule.LeadEmail, schedule.LeadPhoneNumber, schedule.ScheduledDateTime.ToString(), schedule.LeadMessage);
+                }catch(Exception) { }
 
                 return "OK: Call request sent";
-            }catch(Exception)
+            }catch(Exception ex)
             {
+                AppException exception = new AppException();
+                exception.ErrorDateTime = DateTime.Now;
+                exception.Message = ex.Message;
+                exception.FullString = ex.ToString();
+                context.AppExceptions.Add(exception);
+                await context.SaveChangesAsync();
                 return "Error";
             }
         }
@@ -581,10 +611,13 @@ namespace CallMeAPI.Controllers
             return DateTime.Parse(date + " " + time);
         }
 
+
         // POST: /api/callme
         [HttpGet("snippetcode/{token}")]
         public IEnumerable<string> GetSnippetCode(string token)
         {
+            AuthController.ValidateAndGetCurrentUserName(this.HttpContext.Request);
+
             string host = Request.Host.Host;
             host = host + ":" + Request.Host.Port;
 
@@ -610,7 +643,27 @@ namespace CallMeAPI.Controllers
             return result;
         }
 
-        public async Task<string> Call(Guid widgetID, string phoneNumber, string apiKey, string extension, string customerName)//[FromBody]TestCall callInfo)
+
+        public static string GetSnippetCodeStatic(string token)
+        {
+            string  host = Program.Host;
+
+            string _rootPath = "js/";
+
+            StreamReader reader = new StreamReader(_rootPath + "snippet-template.js");
+            string content = reader.ReadToEnd();
+            reader.Close();
+
+            content = content.Replace("$server$", Program.HTTP_PREFIX + host);
+            content = content.Replace("$token$", token);
+
+            content = Regex.Replace(content, @"\n|\r", "");
+
+            return content;
+        }
+
+
+        public async Task<string> Call(Guid widgetID, string phoneNumber, string apiKey, string extension, string customerName,int wait = 0)//[FromBody]TestCall callInfo)
         {
             string requestStr = "";
             string responseStr = "";
@@ -632,7 +685,7 @@ namespace CallMeAPI.Controllers
                     + "extension=" + extension + sep
                     + "destination=" + phoneNumber + sep
                     + "cidname=" + customerName + sep
-                    + "wait=0";
+                    + "wait=" + wait.ToString();
 
                 requestStr = postData;
 
