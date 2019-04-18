@@ -115,7 +115,7 @@
 #zcwMiniButton {
     display: block;
     position:fixed;
-    right: 24px;bottom: 100px;width:70px;
+    right: 24px;bottom: 123px;width:70px;
     height:70px;
     cursor:pointer;
     opacity:0.9;
