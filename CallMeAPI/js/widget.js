@@ -93,7 +93,7 @@ function validateCallMeForm(){
         if (value.substr(0, 3) == '070')
             return false;
 
-        if(/^(07\d{8,12}|01\d{8,12}|02\d{8,12}|03\d{8,12})$/.test( value ))
+        if(/^(07\d{8,12}|01\d{8,12}|02\d{8,12})$/.test( value ))
         { return true;} else{ return false;}
     },"This Phone no is for the UK customers only.");
 

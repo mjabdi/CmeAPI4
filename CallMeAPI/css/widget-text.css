@@ -14,7 +14,7 @@
 
 .iconcallwg{
 position: fixed;
-right: 73px;
+right: 0px;
 bottom: 73px;
 text-align: center;
 cursor: pointer;
@@ -40,7 +40,7 @@ text-transform: uppercase;
 .talktoleadsnow-branding
 {
 position: fixed;
-right: 90px;
+right: 18px;
 bottom: 48px;
 text-align: center;
 cursor: pointer;
@@ -80,7 +80,7 @@ z-index : 8999;
  .talktoleadesnow-brand-bg
  {
      position: fixed;
-     right: 159px;
+     right: 85px;
      bottom: 53px;
      z-index: 99999;
      width: 15px;

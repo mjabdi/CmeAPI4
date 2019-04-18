@@ -115,33 +115,25 @@
 #zcwMiniButton {
     display: block;
     position:fixed;
-    right: 24px;bottom: 100px;width:70px;
+    right: 100px;bottom: 100px;width:70px;
     height:70px;
     cursor:pointer;
     opacity:0.9;
     z-index:99990;
 }
 
-@media screen and (max-width: 460px) {
+/* @media screen and (max-width: 460px) {
     #zcwMiniButton {
-        right : -15px !important;
-        bottom: 150px !important;
-        width: 60px !important;
+        display: none !important;
+        opacity: 0;
     }
 
     .talktoleadsnow-branding{
         display: none !important;
         opacity: 0;
     }
+} */
 
-    .iconcallwg
-    {
-        display: none !important;
-        opacity: 0;
-        /* right : 35% !important;
-        bottom: 10px !important; */
-    }
-}
 
 
 #zcwMiniButton #zcwMiniButtonMain {

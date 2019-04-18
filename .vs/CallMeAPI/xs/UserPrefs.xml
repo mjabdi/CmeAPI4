@@ -1,9 +1,9 @@
 ﻿<Properties StartupConfiguration="{C87F8D7C-0F79-485D-85A5-9F762BB1B8AE}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="CallMeAPI/Controllers/EmailManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="CallMeAPI/Controllers/StripeWebHookController.cs">
     <Files>
-      <File FileName="CallMeAPI/Program.cs" Line="15" Column="6" />
-      <File FileName="CallMeAPI/Controllers/CallmeController.cs" Line="628" Column="21" />
-      <File FileName="CallMeAPI/Controllers/AuthController.cs" Line="263" Column="17" />
+      <File FileName="CallMeAPI/Program.cs" Line="13" Column="2" />
+      <File FileName="CallMeAPI/Controllers/CallmeController.cs" Line="545" Column="49" />
+      <File FileName="CallMeAPI/Controllers/AuthController.cs" Line="266" Column="14" />
       <File FileName="CallMeAPI/appsettings.json" Line="19" Column="56" />
       <File FileName="CallMeAPI/DTO/LoginDTO.cs" Line="5" Column="18" />
       <File FileName="CallMeAPI/Controllers/StyleController.cs" Line="64" Column="70" />
@@ -14,22 +14,22 @@
       <File FileName="CallMeAPI/DTO/WidgetDTO.cs" Line="27" Column="28" />
       <File FileName="CallMeAPI/Controllers/JSController.cs" Line="36" Column="51" />
       <File FileName="CallMeAPI/Startup.cs" Line="26" Column="84" />
-      <File FileName="CallMeAPI/Controllers/GradwellController.cs" Line="33" Column="1" />
+      <File FileName="CallMeAPI/Controllers/GradwellController.cs" Line="67" Column="70" />
       <File FileName="CallMeAPI/Models/CallInfo.cs" Line="1" Column="1" />
       <File FileName="CallMeAPI/Models/CallbackSchedule.cs" Line="13" Column="20" />
-      <File FileName="CallMeAPI/Models/MyDBContext.cs" Line="30" Column="70" />
+      <File FileName="CallMeAPI/Models/MyDBContext.cs" Line="49" Column="1" />
       <File FileName="CallMeAPI/Models/EventLog.cs" Line="1" Column="1" />
       <File FileName="CallMeAPI/ServiceExtension.cs" Line="13" Column="28" />
-      <File FileName="CallMeAPI/Controllers/EmailManager.cs" Line="253" Column="1" />
+      <File FileName="CallMeAPI/Controllers/EmailManager.cs" Line="138" Column="28" />
       <File FileName="CallMeAPI/Models/Subscription.cs" Line="19" Column="1" />
       <File FileName="CallMeAPI/Models/User.cs" Line="25" Column="47" />
-      <File FileName="CallMeAPI/Models/CallLog.cs" Line="12" Column="1" />
-      <File FileName="CallMeAPI/Controllers/StripeWebHookController.cs" Line="299" Column="1" />
+      <File FileName="CallMeAPI/Models/CallLog.cs" Line="13" Column="23" />
+      <File FileName="CallMeAPI/Controllers/StripeWebHookController.cs" Line="270" Column="46" />
       <File FileName="CallMeAPI/Models/StripeEventLog.cs" Line="13" Column="1" />
-      <File FileName="CallMeAPI/Controllers/StripeController.cs" Line="111" Column="1" />
+      <File FileName="CallMeAPI/Controllers/StripeController.cs" Line="116" Column="1" />
       <File FileName="CallMeAPI/Models/SecurityLinkToken.cs" Line="1" Column="1" />
       <File FileName="CallMeAPI/DTO/SubscriptionDTO.cs" Line="23" Column="1" />
-      <File FileName="CallMeAPI/Controllers/SubscriptionController.cs" Line="30" Column="1" />
+      <File FileName="CallMeAPI/Controllers/SubscriptionController.cs" Line="26" Column="5" />
       <File FileName="CallMeAPI/Models/Invoice.cs" Line="8" Column="14" />
       <File FileName="CallMeAPI/Models/AppException.cs" Line="12" Column="1" />
       <File FileName="CallMeAPI/Models/CallReport.cs" Line="22" Column="42" />
